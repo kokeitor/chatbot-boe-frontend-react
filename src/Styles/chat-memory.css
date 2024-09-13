@@ -1,0 +1,4 @@
+.textAreaMemory {
+  resize: none;
+  overflow-y: auto;
+}

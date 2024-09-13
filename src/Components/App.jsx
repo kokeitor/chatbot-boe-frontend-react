@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import BOELogo from './assets/BOE_logo.svg'
-import { ChatForm } from './ChatForm'
-import { ChatMemory } from './ChatMemory'
-import './App.css'
+import BOELogo from "../assets/BOE_logo.png";
+import { ChatForm } from "./ChatForm";
+import { ChatMemory } from "./ChatMemory";
+import "../Styles/app.css";
+import { useState } from "react";
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
       <ChatMemory />
       <ChatForm />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
