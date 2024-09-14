@@ -1,5 +1,6 @@
 import { BsArrowUpCircle, BsFileEarmarkArrowUp } from "react-icons/bs";
 import "../Styles/chat-form.css";
+import { useState } from "react";
 
 function ImageFileLabel(props) {
   return (
@@ -17,11 +18,26 @@ function ImageButtonLabel(props) {
   );
 }
 
+function getIaAnswer(userMessage) {
+  const iaFakeAnswer = {
+    ia: "Eres tonto o que",
+    user: userMessage,
+  };
+
+  return iaFakeAnswer;
+}
+
 export function ChatForm() {
   const multipleFilesFlag = true;
+  let [memory, setMemory] = useState("");
   return (
     <div>
-      <form className="form">
+      <form
+        className="form"
+        onSubmit={(e) => {
+          console.log(e);
+        }}
+      >
         <ImageFileLabel htmlFor="inputFile" labelClassName="inputFileLabel" />
         <input
           type="file"
@@ -37,12 +53,25 @@ export function ChatForm() {
           placeholder="Pregúntame algo sobre tus archivos PDf del BOE ..."
           id="inputText"
           className="inputText"
+          required={true}
+          onChange={(e) => {
+            setMemory(e.target.value);
+            console.log(`Memory : ${memory}`);
+          }}
         />
         <ImageButtonLabel
           htmlFor="SubmitButton"
           labelClassName="submitButtonLabel"
         />
-        <button type="submit" id="SubmitButton" className="SubmitButton" />
+        <button
+          type="submit"
+          onClick={(e) => {
+            const iaAnswer = getIaAnswer(memory);
+            console.log(`iaAnswer : ${iaAnswer}`);
+          }}
+          id="SubmitButton"
+          className="SubmitButton"
+        />
       </form>
     </div>
   );

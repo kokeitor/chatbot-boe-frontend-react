@@ -1,5 +1,6 @@
 import "../Styles/chat-memory.css";
 
+const memory = "Memoria del chat";
 export function ChatMemory() {
   return (
     <textarea
@@ -7,9 +8,9 @@ export function ChatMemory() {
       rows="5"
       cols="50"
       className="textAreaMemory"
+      value={memory}
+      readOnly={true}
     >
-      You can type your content here, and the textarea will become scrollable
-      when the content exceeds the height.
     </textarea>
   );
 }
