@@ -35,6 +35,9 @@ export function ChatForm() {
       <form
         className="form"
         onSubmit={(e) => {
+          e.preventDefault();
+          const iaAnswer = getIaAnswer(memory);
+          console.log(`User : ${iaAnswer.user} -- iaAnswer : ${iaAnswer.ia}`);
           console.log(e);
         }}
       >
@@ -65,10 +68,6 @@ export function ChatForm() {
         />
         <button
           type="submit"
-          onClick={(e) => {
-            const iaAnswer = getIaAnswer(memory);
-            console.log(`User : ${iaAnswer.user} -- iaAnswer : ${iaAnswer.ia}`);
-          }}
           id="SubmitButton"
           className="SubmitButton"
         />
