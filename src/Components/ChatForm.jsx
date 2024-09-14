@@ -35,10 +35,10 @@ export function ChatForm() {
       <form
         className="form"
         onSubmit={(e) => {
+            console.log(e);
           e.preventDefault();
           const iaAnswer = getIaAnswer(memory);
           console.log(`User : ${iaAnswer.user} -- iaAnswer : ${iaAnswer.ia}`);
-          console.log(e);
         }}
       >
         <ImageFileLabel htmlFor="inputFile" labelClassName="inputFileLabel" />
