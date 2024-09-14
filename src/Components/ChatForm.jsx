@@ -29,7 +29,7 @@ function getIaAnswer(userMessage) {
 
 export function ChatForm() {
   const multipleFilesFlag = true;
-  let [memory, setMemory] = useState("");
+  const [memory, setMemory] = useState("");
   return (
     <div>
       <form
