@@ -67,7 +67,7 @@ export function ChatForm() {
           type="submit"
           onClick={(e) => {
             const iaAnswer = getIaAnswer(memory);
-            console.log(`iaAnswer : ${iaAnswer}`);
+            console.log(`User : ${iaAnswer.user} -- iaAnswer : ${iaAnswer.ia}`);
           }}
           id="SubmitButton"
           className="SubmitButton"
