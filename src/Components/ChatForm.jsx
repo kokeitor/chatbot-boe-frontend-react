@@ -1,6 +1,6 @@
 import { BsArrowUpCircle, BsFileEarmarkArrowUp } from "react-icons/bs";
 import "../Styles/chat-form.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function ImageFileLabel(props) {
   return (
@@ -20,22 +20,53 @@ function ImageButtonLabel(props) {
 
 export function ChatForm() {
   const multipleFilesFlag = true;
-  const [memory, setMemory] = useState("");
+  const [userMessage, setUserMessage] = useState("");
+  const [chatMemory, setChatMemory] = useState([]);
   const [files, setFiles] = useState([]);
-  async function getIaAnswer(userMessage) {
-    const response = { ia: "Eres tonto o que", user: userMessage };
-    return response;
+
+  // Log the files whenever they change
+  useEffect(() => {
+    console.log(`User message : ${userMessage}`);
+  }, [userMessage]);
+
+  // Log the files whenever they change
+  useEffect(() => {
+    console.log(`Input files : ${files}`);
+  }, [files]);
+
+  // Log chat memory when it updates
+  useEffect(() => {
+    chatMemory.forEach((m) =>
+      console.log(
+        `Memory --> IA: ${m.iaResponse} -- User Message: ${m.userMessage} -- Files: ${m.files}`
+      )
+    );
+  }, [chatMemory]);
+
+  function getIaAnswer(userText, inputFiles) {
+    const response = {
+      iaResponse: "Eres tonto o que",
+      userMessage: userText,
+      files: inputFiles,
+    };
+    const statusCode = 200;
+    return [response, statusCode];
   }
+
   return (
     <div>
       <form
         className="form"
         onSubmit={(e) => {
-          console.log(e);
           e.preventDefault();
-          const iaAnswer = getIaAnswer(memory)
-          // console.log(`User : ${iaAnswer.user} -- iaAnswer : ${iaAnswer.ia}`);
-          console.log(`Response : ${iaAnswer}`);
+          const [response, statusCode] = getIaAnswer(userMessage, files);
+          if (statusCode === 200) {
+            setChatMemory((prevMemory) => [...prevMemory, response]);
+          }
+          console.log(`Status code : ${statusCode}`);
+          console.log(
+            `User Message : ${response.userMessage} -- Files : ${response.files} -- IA Response : ${response.iaResponse} `
+          );
         }}
       >
         <ImageFileLabel htmlFor="inputFile" labelClassName="inputFileLabel" />
@@ -45,24 +76,24 @@ export function ChatForm() {
           accept="application/pdf"
           multiple={multipleFilesFlag}
           className="inputFile"
-          onChange={(e) => {
-            // e.target.files.forEach(file => setFiles(file))
-            setFiles([...files, e.target.files]);
-            // setFiles([...filesFakePath, e.target.files]);
-            console.log(`files :${files}`);
+          onChange={(event) => {
+            const selectedFiles = Array.from(event.target.files).map(
+              (file) => file.name
+            );
+            setFiles(selectedFiles);
           }}
         />
         <input
           type="text"
           autoComplete="off"
           minLength={5}
-          placeholder="Pregúntame algo sobre tus archivos PDf del BOE ..."
+          placeholder="Pregúntame algo sobre tus archivos PDF del BOE ..."
           id="inputText"
           className="inputText"
           required={true}
           onChange={(e) => {
-            setMemory(e.target.value);
-            console.log(`Memory : ${memory}`);
+            setUserMessage(e.target.value);
+            console.log(`userMessage : ${e.target.value}`); // Log the new message
           }}
         />
         <ImageButtonLabel
