@@ -1,6 +1,7 @@
 import { BsArrowUpCircle, BsFileEarmarkArrowUp } from "react-icons/bs";
 import "../Styles/chat-form.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { MemoryContext } from "../Context/MemoryContext";
 
 function ImageFileLabel(props) {
   return (
@@ -19,12 +20,13 @@ function ImageButtonLabel(props) {
 }
 
 export function ChatForm() {
+  // const {chatMemory , addMemory} = useContext(MemoryContext);
   const multipleFilesFlag = true;
   const [userMessage, setUserMessage] = useState("");
   const [chatMemory, setChatMemory] = useState([]);
   const [files, setFiles] = useState([]);
 
-  // Log the files whenever they change
+  // Log the userMessage whenever they change
   useEffect(() => {
     console.log(`User message : ${userMessage}`);
   }, [userMessage]);
@@ -62,6 +64,7 @@ export function ChatForm() {
           const [response, statusCode] = getIaAnswer(userMessage, files);
           if (statusCode === 200) {
             setChatMemory((prevMemory) => [...prevMemory, response]);
+            // addMemory(response)
           }
           console.log(`Status code : ${statusCode}`);
           console.log(
