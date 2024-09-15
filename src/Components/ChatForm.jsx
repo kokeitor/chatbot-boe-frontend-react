@@ -18,25 +18,14 @@ function ImageButtonLabel(props) {
   );
 }
 
-async function getIaAnswer(userMessage) {
-  try {
-    const response = await fetch("https://reqres.in/api/users?page=2");
-    const responseText = await response.text();
-    console.log(`ASYNC fecth Response : ${responseText}`);
-    return responseText[0];
-  } catch (e) {
-    console.log(`ASYNC fetch Error API --> ${e}`);
-    return {
-      ia: "Eres tonto o que",
-      user: userMessage,
-    };
-  }
-}
-
 export function ChatForm() {
   const multipleFilesFlag = true;
   const [memory, setMemory] = useState("");
   const [files, setFiles] = useState([]);
+  async function getIaAnswer(userMessage) {
+    const response = { ia: "Eres tonto o que", user: userMessage };
+    return response;
+  }
   return (
     <div>
       <form
@@ -45,10 +34,8 @@ export function ChatForm() {
           console.log(e);
           e.preventDefault();
           const iaAnswer = getIaAnswer(memory)
-            .then((result) => result)
-            .catch((e) => console.log(e));
           // console.log(`User : ${iaAnswer.user} -- iaAnswer : ${iaAnswer.ia}`);
-          console.log(`API answwer : ${iaAnswer}`);
+          console.log(`Response : ${iaAnswer}`);
         }}
       >
         <ImageFileLabel htmlFor="inputFile" labelClassName="inputFileLabel" />
@@ -60,7 +47,7 @@ export function ChatForm() {
           className="inputFile"
           onChange={(e) => {
             // e.target.files.forEach(file => setFiles(file))
-            setFiles([...files,e.target.files])
+            setFiles([...files, e.target.files]);
             // setFiles([...filesFakePath, e.target.files]);
             console.log(`files :${files}`);
           }}
