@@ -10,14 +10,17 @@ export function ChatMemory() {
 
   if (chatMemory.length != 0) {
     return (
-      <div className="container max-w-md rounded-md px-4 py-4 mt-2 mb-2 w-auto mx-auto bg-gray-600">
+      <div className="container max-w-md rounded-md px-4 py-4 mt-2 mb-5 w-auto mx-auto shadow-xl shadow-gray-600 hover:shadow-gray-800 bg-gray-600">
         <div className="container flex-center px-4 py-2 mb-5 mt-1 rounded-md bg-slate-500">
-          <h1 className="text-center mt-2 mb-2 text-xl text-white font-bold font-sans hover:text-2xl">
+          <h1 className="text-center mt-2 mb-2 text-xl text-white font-bold font-mono">
             {titleMemory}
           </h1>
         </div>
         {chatMemory.map((m, index) => (
-          <div key={index} className="rounded-md mb-8 mx-auto h-auto w-auto">
+          <div
+            key={index}
+            className="font-mono rounded-md mb-8 mx-auto h-auto w-auto"
+          >
             <div className="flex mb-1">
               <PiUserFill
                 size={25}
@@ -57,13 +60,13 @@ export function ChatMemory() {
     );
   } else if (chatMemory.length == 0) {
     return (
-      <div className="container max-w-md rounded-md px-4 py-4 mt-2 mb-2 w-auto mx-auto bg-gray-600">
+      <div className="container max-w-md rounded-md px-4 py-4 mt-2 mb-5 w-auto mx-auto shadow-xl shadow-gray-600 hover:shadow-gray-800 bg-gray-600">
         <div className="container flex-center px-4 py-2 mb-5 mt-1 rounded-md bg-slate-500">
-          <h1 className="text-center mt-2 mb-2 text-xl text-white font-bold font-sans hover:text-2xl">
+          <h1 className="text-center mt-2 mb-2 text-xl text-white font-bold font-mono">
             {emptyMemory}
           </h1>
         </div>
-        <h3 className="text-center mt-2 mb-2 text-lg font-sans hover:font-bold">
+        <h3 className="text-center mt-2 mb-2 text-lg font-mono hover:font-bold">
           {"Chat vacio"}
         </h3>
       </div>
