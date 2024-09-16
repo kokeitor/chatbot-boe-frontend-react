@@ -20,10 +20,10 @@ function ImageButtonLabel(props) {
 }
 
 export function ChatForm() {
-  // const {chatMemory , addMemory} = useContext(MemoryContext);
+  const { addMemory } = useContext(MemoryContext);
   const multipleFilesFlag = true;
   const [userMessage, setUserMessage] = useState("");
-  const [chatMemory, setChatMemory] = useState([]);
+  // const [chatMemory, setChatMemory] = useState([]);
   const [files, setFiles] = useState([]);
 
   // Log the userMessage whenever they change
@@ -35,15 +35,6 @@ export function ChatForm() {
   useEffect(() => {
     console.log(`Input files : ${files}`);
   }, [files]);
-
-  // Log chat memory when it updates
-  useEffect(() => {
-    chatMemory.forEach((m) =>
-      console.log(
-        `Memory --> IA: ${m.iaResponse} -- User Message: ${m.userMessage} -- Files: ${m.files}`
-      )
-    );
-  }, [chatMemory]);
 
   function getIaAnswer(userText, inputFiles) {
     const response = {
@@ -63,8 +54,7 @@ export function ChatForm() {
           e.preventDefault();
           const [response, statusCode] = getIaAnswer(userMessage, files);
           if (statusCode === 200) {
-            setChatMemory((prevMemory) => [...prevMemory, response]);
-            // addMemory(response)
+            addMemory(response);
           }
           console.log(`Status code : ${statusCode}`);
           console.log(
@@ -96,7 +86,6 @@ export function ChatForm() {
           required={true}
           onChange={(e) => {
             setUserMessage(e.target.value);
-            console.log(`userMessage : ${e.target.value}`); // Log the new message
           }}
         />
         <ImageButtonLabel
