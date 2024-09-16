@@ -32,7 +32,7 @@ function App() {
         <ChatForm />
         <MemoryRestartButton />
       </div>
-      <div className="h-1/5 w-full rounded-lg grid grid-cols-7 gap-4 px-4 py-4 bg-[#000000]">
+      <div className="h-min w-full rounded-lg grid grid-cols-7 gap-4 px-4 py-4 bg-[#000000]">
         <Card
           href="https://es.react.dev/"
           title="React"

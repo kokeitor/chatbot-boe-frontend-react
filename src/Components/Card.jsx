@@ -20,7 +20,7 @@ export function Card(props) {
             rel="noopener noreferrer"
           >
         <props.icon
-            size={25}
+            size={30}
             color={props.iconColor}
             className="mt-3 mx-auto hover:scale-125 transition transform duration-200"
           />
