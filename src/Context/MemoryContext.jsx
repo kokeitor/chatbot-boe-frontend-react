@@ -17,12 +17,16 @@ export function MemoryContextProvider(props) {
   const addMemory = (memory) => {
     setChatMemory((prevMemory) => [...prevMemory, memory]);
   };
+  const restartMemory = () => {
+    setChatMemory([]);
+  };
 
   return (
     <MemoryContext.Provider
       value={{
         chatMemory: chatMemory,
         addMemory: addMemory,
+        restartMemory: restartMemory,
       }}
     >
       {props.children}

@@ -1,7 +1,7 @@
 import BOELogo from "../assets/BOE_logo.png";
 import { ChatForm } from "./ChatForm";
 import { ChatMemory } from "./ChatMemory";
-import { MemoryContextProvider, MemoryContext } from "../Context/MemoryContext";
+import { MemoryRestartButton } from "./MemoryRestartButton";
 import "../Styles/app.css";
 
 function App() {
@@ -14,6 +14,7 @@ function App() {
       </div>
       <ChatMemory />
       <ChatForm />
+      <MemoryRestartButton />
     </>
   );
 }
