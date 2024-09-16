@@ -1,6 +1,8 @@
 import BOELogo from "../assets/BOE_logo.png";
 import { FaReact } from "react-icons/fa";
 import { SiVite } from "react-icons/si";
+import { FaGithub } from "react-icons/fa";
+import { FaNodeJs } from "react-icons/fa";
 import { ChatForm } from "./ChatForm";
 import { Card } from "./Card";
 import { ChatMemory } from "./ChatMemory";
@@ -29,8 +31,11 @@ function App() {
         <MemoryRestartButton />
       </div>
       <div className="grid grid-cols-10 gap-2 h-auto w-auto rounded-lg px-2 py-2 bg-slate-500">
-        <Card title="Developed with REACT" iconColor="#22c55e" bgcolour="#22c55e" text="Follow me on Gitub" icon={FaReact} />
-        <Card title="Developed with Vite and Node.js" iconColor="#22c55e" text="Follow me on LinkedIn" icon={SiVite} />
+        <Card title="UI Developed with REACT" iconColor="#22c55e" bgcolour="#22c55e" text="..." icon={FaReact} />
+        <Card title="UI Developed with Vite" iconColor="#22c55e" text="..." icon={SiVite} />
+        <Card title="UI Developed with Node.js" iconColor="#22c55e" text="...." icon={FaNodeJs} />
+        <Card title="UI Developed with Node.js" iconColor="#22c55e" text="Follow me on GitHub" icon={FaGithub} />
+        <Card title="UI Developed with Node.js" iconColor="#22c55e" text="Follow me on LinkedIn" icon={FaNodeJs} />
       </div>
     </main>
   );
