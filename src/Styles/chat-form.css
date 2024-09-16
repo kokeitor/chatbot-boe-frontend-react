@@ -3,7 +3,7 @@
   height: 100%; /* Full height */
   max-width: none; /* Remove max width restriction */
   padding: 20px;
-  background-color: darkgray;
+  background-color: #4b5563;
   border-radius: 10px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   display: flex;
