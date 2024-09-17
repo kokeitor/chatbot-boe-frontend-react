@@ -10,7 +10,7 @@ export function ChatMemory() {
 
   if (chatMemory.length != 0) {
     return (
-      <div className="container max-w-md rounded-md px-4 py-4 mt-2 mb-5 w-auto mx-auto shadow-xl shadow-gray-600 hover:shadow-gray-800 bg-gray-600">
+      <div className="container max-w-md rounded-md px-4 py-4 mt-2 mb-5 w-auto mx-auto shadow-md hover:shadow-xl shadow-[#000000] hover:shadow-[#000000] bg-gray-600">
         <div className="container flex-center px-4 py-2 mb-5 mt-1 rounded-md bg-slate-500">
           <h1 className="text-center mt-2 mb-2 text-xl text-white font-bold font-mono">
             {titleMemory}
@@ -25,7 +25,7 @@ export function ChatMemory() {
               <PiUserFill
                 size={25}
                 title="User"
-                color="#3b82f6"
+                color="#2a63ff"
                 className="mr-auto"
               />
             </div>
@@ -33,7 +33,7 @@ export function ChatMemory() {
             {/* User message container */}
             <div className="flex justify-start">
               {/* Align to the left */}
-              <p className="inline-block max-w-max rounded-md px-2 py-2 hover:font-bold bg-blue-500">
+              <p className="inline-block max-w-max rounded-md px-2 py-2 hover:font-bold bg-[#2a63ff]">
                 {`${m.userMessage}`}
               </p>
             </div>
@@ -42,7 +42,7 @@ export function ChatMemory() {
               <BsRobot
                 size={25}
                 title="IA"
-                color="#22c55e"
+                color="#08fa30"
                 className="ml-auto"
               />
             </div>
@@ -50,7 +50,7 @@ export function ChatMemory() {
             {/* IA response container */}
             <div className="flex justify-end">
               {/* Align to the right */}
-              <p className="inline-block max-w-max rounded-md px-2 py-2 mt-1 hover:font-bold bg-green-500">
+              <p className="inline-block max-w-max rounded-md px-2 py-2 mt-1 hover:font-bold bg-[#08fa30]">
                 {`${m.iaResponse}`}
               </p>
             </div>
@@ -60,7 +60,7 @@ export function ChatMemory() {
     );
   } else if (chatMemory.length == 0) {
     return (
-      <div className="container max-w-md rounded-md px-4 py-4 mt-2 mb-5 w-auto mx-auto shadow-xl shadow-gray-600 hover:shadow-gray-800 bg-gray-600">
+      <div className="container max-w-md rounded-md px-4 py-4 mt-2 mb-5 w-auto mx-auto shadow-md hover:shadow-xl shadow-[#000000] hover:shadow-[#000000] bg-gray-600">
         <div className="container flex-center px-4 py-2 mb-5 mt-1 rounded-md bg-slate-500">
           <h1 className="text-center mt-2 mb-2 text-xl text-white font-bold font-mono">
             {emptyMemory}

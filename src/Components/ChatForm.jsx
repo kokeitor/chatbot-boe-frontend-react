@@ -9,7 +9,7 @@ import toast, { Toaster } from "react-hot-toast";
 function ImageFileLabel(props) {
   return (
     <label htmlFor={props.htmlFor} className={props.labelClassName}>
-      <BsFileEarmarkArrowUp size={35} />
+      <BsFileEarmarkArrowUp size={35}/>
     </label>
   );
 }
@@ -17,7 +17,7 @@ function ImageFileLabel(props) {
 function ImageButtonLabel(props) {
   return (
     <label htmlFor={props.htmlFor} className={props.labelClassName}>
-      <BsArrowUpCircle size={35} />
+      <BsArrowUpCircle size={35}/>
     </label>
   );
 }

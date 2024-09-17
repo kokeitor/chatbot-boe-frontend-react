@@ -5,11 +5,18 @@
   padding: 20px;
   background-color: #4b5563;
   border-radius: 10px;
-  box-shadow: 0px 4px 12px #4a5563; /* Subtle shadow */
+  box-shadow: 2px 2px 8px #000000; /* Subtle shadow */
   display: flex;
   flex-direction: row; /* Make labels and input be in a row */
   justify-content: flex-end;
   align-items: center;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.form:hover {
+  box-shadow: 2px 2px 20px #000000;
+  background-color: #42474f;
 }
 
 .inputFile {
@@ -46,6 +53,7 @@
 .inputFileLabel:hover {
   opacity: 0.7; /* Slightly reduce opacity for a subtle fade effect */
   transform: scale(1.1); /* Scale the logo slightly to create a zoom effect */
+  color: #08fa30;
 }
 
 .submitButtonLabel {
@@ -60,4 +68,5 @@
 .submitButtonLabel:hover {
   opacity: 0.7; /* Slightly reduce opacity for a subtle fade effect */
   transform: scale(1.1); /* Scale the logo slightly to create a zoom effect */
+  color: #08fa30;
 }

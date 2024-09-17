@@ -7,8 +7,8 @@ import { FaNodeJs } from "react-icons/fa";
 
 function DevPage() {
   return (
-    <main className="h-full w-full bg-neutral-700 px-4 py-4">
-      <div className="h-min w-full rounded-lg grid grid-cols-7 gap-4 px-4 py-4 bg-[#000000]">
+    <main className="h-screen w-full bg-neutral-700">
+      <div className="h-min w-auto rounded-lg grid grid-cols-7 gap-4 px-4 py-4">
         <Card
           href="https://es.react.dev/"
           title="React"
