@@ -1,6 +1,7 @@
 import { BsArrowUpCircle, BsFileEarmarkArrowUp } from "react-icons/bs";
 import "../Styles/chat-form.css";
 import { useState, useEffect, useContext } from "react";
+import { useFetchData } from "../Hooks/useFetchData";
 import { MemoryContext } from "../Context/MemoryContext";
 
 function ImageFileLabel(props) {
@@ -46,20 +47,29 @@ export function ChatForm() {
     return [response, statusCode];
   }
 
+  const { response, error, loading } = useFetchData(
+    "",
+    "",
+    "https://reqres.in/api/users/2"
+  );
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+
   return (
     <div>
       <form
         className="form"
         onSubmit={(e) => {
           e.preventDefault();
-          const [response, statusCode] = getIaAnswer(userMessage, files);
-          if (statusCode === 200) {
-            addMemory(response);
-          }
-          console.log(`Status code : ${statusCode}`);
-          console.log(
-            `User Message : ${response.userMessage} -- Files : ${response.files} -- IA Response : ${response.iaResponse} `
-          );
+          //const [response, statusCode] = getIaAnswer(userMessage, files);
+          //if (statusCode === 200) {
+          //  addMemory(response);
+
+          //}
+          //console.log(`Status code : ${statusCode}`);
+          //console.log(
+          //  `User Message : ${response.userMessage} -- Files : ${response.files} -- IA Response : ${response.iaResponse} `
+          //);
         }}
       >
         <ImageFileLabel htmlFor="inputFile" labelClassName="inputFileLabel" />
