@@ -5,9 +5,7 @@ import { MemoryContextProvider } from "./Context/MemoryContext";
 import "./Styles/index.css";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
     <MemoryContextProvider>
       <App />
     </MemoryContextProvider>
-  </StrictMode>
 );
