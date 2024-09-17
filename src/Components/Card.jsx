@@ -6,7 +6,7 @@ import { PiUserFill } from "react-icons/pi";
 export function Card(props) {
   return (
     <>
-      <div className="text-white font-mono text-xs max-w-max bg-[#9c9797] items-center p-2 rounded-lg">
+      <div className="text-white font-mono text-xs max-w-max bg-[#858282] items-center p-2 rounded-lg">
         <div className="inline-block">
           <h1 className="font-semibold text-center">
             {props.title ? props.title : ""}
