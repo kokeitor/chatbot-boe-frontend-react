@@ -3,17 +3,19 @@ import { FaReact } from "react-icons/fa";
 import { SiVite } from "react-icons/si";
 import { FaGithub } from "react-icons/fa";
 import { SiFastapi } from "react-icons/si";
-import { RiTailwindCssFill } from "react-icons/ri"
+import { RiTailwindCssFill } from "react-icons/ri";
 import { FaNodeJs } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
 import { ChatForm } from "./ChatForm";
 import { Card } from "./Card";
+import { NavBar } from "./NavBar";
 import { ChatMemory } from "./ChatMemory";
 import { MemoryRestartButton } from "./MemoryRestartButton";
 
 function App() {
   return (
     <main className="h-auto w-full bg-neutral-700 px-4 py-4">
+      <NavBar />
       <div className="container rounded-lg px-4 py-4 mx-auto my-auto bg-slate-500">
         <a href="https://www.boe.es/" target="_blank" rel="noopener noreferrer">
           <img
