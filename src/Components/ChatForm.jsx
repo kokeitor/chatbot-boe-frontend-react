@@ -1,4 +1,5 @@
 import { BsArrowUpCircle, BsFileEarmarkArrowUp } from "react-icons/bs";
+import axios from "axios";
 import "../Styles/chat-form.css";
 import { useState, useEffect, useContext } from "react";
 import { useFetchData } from "../Hooks/useFetchData";
@@ -21,11 +22,15 @@ function ImageButtonLabel(props) {
 }
 
 export function ChatForm() {
+  // from useContext
   const { addMemory } = useContext(MemoryContext);
-  const multipleFilesFlag = true;
+  const { errorStatusCode, setErrorStatus } = useContext(MemoryContext);
+  const { loadingApiResponse, changeLoadingApiResponse } =
+    useContext(MemoryContext);
+  // from useState
   const [userMessage, setUserMessage] = useState("");
-  // const [chatMemory, setChatMemory] = useState([]);
   const [files, setFiles] = useState([]);
+  const multipleFilesFlag = true;
 
   // Log the userMessage whenever they change
   useEffect(() => {
@@ -37,41 +42,64 @@ export function ChatForm() {
     console.log(`Input files : ${files}`);
   }, [files]);
 
-  function getIaAnswer(userText, inputFiles) {
-    const response = {
-      iaResponse: "Eres tonto o que",
-      userMessage: userText,
-      files: inputFiles,
-    };
-    const statusCode = 200;
-    return [response, statusCode];
-  }
+  // Submit handle function --> post method backend
+  const handleSubmit = async (e) => {
+    changeLoadingApiResponse(true);
+    console.log(e);
+    e.preventDefault();
 
-  const { response, error, loading } = useFetchData(
-    "",
-    "",
-    "https://reqres.in/api/users/2"
-  );
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+    // Necessary request params
+    const urlEndpoint = import.meta.env.VITE_BACK_END_ENDPOINT;
+    console.log(`BACK_END_ENDPOINT : ${urlEndpoint}`);
+    const userMessageApiModel = {
+      userMessage: userMessage,
+      files: files,
+    };
+
+    // using fetch
+    //const headers = {
+    //  method: "POST",
+    //  body: JSON.stringify(userMessageApiModel),
+    //  headers: { "Content-type": "application/json" },
+    //};
+    // const response = await fetch(urlEndpoint, headers);
+    // const data = await response.json();
+    // console.log(data);
+    // manage API response and adding response to memory context
+    // addMemory({
+    //   userMessage: data.userMessage,
+    //   iaResponse: data.iaResponse,
+    //   files: data.files,
+    // });
+
+    // using axios
+    const responseAxios = await axios.post(urlEndpoint, userMessageApiModel);
+    console.log(responseAxios);
+    if (responseAxios.status >= 200 && responseAxios.status < 300) {
+      e.target.reset();
+      changeLoadingApiResponse(false);
+      addMemory({
+        userMessage: responseAxios.data.userMessage,
+        iaResponse: responseAxios.data.iaResponse,
+        files: responseAxios.data.files,
+      });
+    } else {
+      changeLoadingApiResponse(false);
+      setErrorStatus(responseAxios.status);
+      addMemory({
+        userMessage: userMessage,
+        iaResponse: `Error API response -- Status code : ${responseAxios.status}`,
+        files: files,
+      });
+    }
+  };
+
+  if (loadingApiResponse) return <p>Loading...</p>;
+  if (errorStatusCode) return <p>Error: {errorStatusCode}</p>;
 
   return (
     <div>
-      <form
-        className="form"
-        onSubmit={(e) => {
-          e.preventDefault();
-          //const [response, statusCode] = getIaAnswer(userMessage, files);
-          //if (statusCode === 200) {
-          //  addMemory(response);
-
-          //}
-          //console.log(`Status code : ${statusCode}`);
-          //console.log(
-          //  `User Message : ${response.userMessage} -- Files : ${response.files} -- IA Response : ${response.iaResponse} `
-          //);
-        }}
-      >
+      <form className="form" onSubmit={handleSubmit}>
         <ImageFileLabel htmlFor="inputFile" labelClassName="inputFileLabel" />
         <input
           type="file"
