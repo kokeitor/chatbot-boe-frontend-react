@@ -17,7 +17,7 @@ export function MemoryContextProvider(props) {
   }, [chatMemory]);
 
   useEffect(() => {
-    console.log(`loading Ap iResponse : ${loadingApiResponse} `);
+    console.log(`Loading Api Response : ${loadingApiResponse} `);
   }, [loadingApiResponse]);
   useEffect(() => {
     console.log(`Error Status code : ${errorStatusCode} `);
@@ -34,11 +34,11 @@ export function MemoryContextProvider(props) {
     if (state === true || state === false) {
       setloadingApiResponse(state);
     } else {
-      console.log(`incorrect value for loadingApiResponse value : ${state}`);
+      console.log(`Incorrect value for loadingApiResponse : ${state}`);
     }
   };
   const setErrorStatus = (status) => {
-    setErrorStatusCode(status)
+    setErrorStatusCode(status);
   };
 
   return (
@@ -51,7 +51,6 @@ export function MemoryContextProvider(props) {
         changeLoadingApiResponse: changeLoadingApiResponse,
         errorStatusCode: errorStatusCode,
         setErrorStatus: setErrorStatus,
-
       }}
     >
       {props.children}

@@ -1,9 +1,10 @@
 import { BsArrowUpCircle, BsFileEarmarkArrowUp } from "react-icons/bs";
 import axios from "axios";
 import "../Styles/chat-form.css";
+import ScaleLoader from "react-spinners/ClipLoader";
 import { useState, useEffect, useContext } from "react";
-import { useFetchData } from "../Hooks/useFetchData";
 import { MemoryContext } from "../Context/MemoryContext";
+import toast, { Toaster } from "react-hot-toast";
 
 function ImageFileLabel(props) {
   return (
@@ -27,17 +28,31 @@ export function ChatForm() {
   const { errorStatusCode, setErrorStatus } = useContext(MemoryContext);
   const { loadingApiResponse, changeLoadingApiResponse } =
     useContext(MemoryContext);
+
   // from useState
   const [userMessage, setUserMessage] = useState("");
   const [files, setFiles] = useState([]);
   const multipleFilesFlag = true;
 
-  // Log the userMessage whenever they change
+  // useEffect to show toaster component error
+  useEffect(() => {
+    if (errorStatusCode) {
+      toast.error(`Error Status Code : ${errorStatusCode}`, {
+        duration: 5000,
+        style: {
+          background: "#363636",
+          color: "#fff",
+        },
+      });
+    }
+  }, [errorStatusCode]);
+
+  // useEffect to Log the userMessage whenever they change
   useEffect(() => {
     console.log(`User message : ${userMessage}`);
   }, [userMessage]);
 
-  // Log the files whenever they change
+  // useEffect Log the files whenever they change
   useEffect(() => {
     console.log(`Input files : ${files}`);
   }, [files]);
@@ -45,6 +60,7 @@ export function ChatForm() {
   // Submit handle function --> post method backend
   const handleSubmit = async (e) => {
     changeLoadingApiResponse(true);
+    setErrorStatus(null);
     console.log(e);
     e.preventDefault();
 
@@ -71,34 +87,93 @@ export function ChatForm() {
     //   iaResponse: data.iaResponse,
     //   files: data.files,
     // });
-
-    // using axios
-    const responseAxios = await axios.post(urlEndpoint, userMessageApiModel);
-    console.log(responseAxios);
-    if (responseAxios.status >= 200 && responseAxios.status < 300) {
-      e.target.reset();
-      changeLoadingApiResponse(false);
-      addMemory({
-        userMessage: responseAxios.data.userMessage,
-        iaResponse: responseAxios.data.iaResponse,
-        files: responseAxios.data.files,
-      });
-    } else {
-      changeLoadingApiResponse(false);
-      setErrorStatus(responseAxios.status);
-      addMemory({
-        userMessage: userMessage,
-        iaResponse: `Error API response -- Status code : ${responseAxios.status}`,
-        files: files,
-      });
-    }
+    //
+    axios
+      .post(urlEndpoint, userMessageApiModel)
+      .then((response) => {
+        toast.success(`API response Status code : ${response.status}`)
+        console.log("Api response correcta:");
+        console.log(response.data);
+        console.log(response.status);
+        console.log(response.statusText);
+        console.log(response.headers);
+        console.log(response.config);
+        addMemory({
+          userMessage: response.data.userMessage,
+          iaResponse: response.data.iaResponse,
+          files: response.data.files,
+        });
+      })
+      .catch((error) => {
+        if (error.response) {
+          // La respuesta fue hecha y el servidor respondió con un código de estado
+          // que esta fuera del rango de 2xx
+          console.log("error.response : ");
+          console.log(error);
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          // La petición fue hecha pero no se recibió respuesta
+          // `error.request` es una instancia de XMLHttpRequest en el navegador y una instancia de
+          // http.ClientRequest en node.js
+          console.log("error.request : ");
+          console.log(error.request);
+        } else {
+          // Algo paso al preparar la petición que lanzo un Error
+          console.log(
+            "Algo paso al preparar la petición que lanzo un Error : ",
+            error.message
+          );
+        }
+        console.log(error.config);
+        console.log(error.toJSON());
+        setErrorStatus(error.response.status);
+        addMemory({
+          userMessage: userMessage,
+          iaResponse: "IA Model API Error Response : " + error.message,
+          files: files,
+        });
+      })
+      .finally(() => changeLoadingApiResponse(false));
   };
-
-  if (loadingApiResponse) return <p>Loading...</p>;
-  if (errorStatusCode) return <p>Error: {errorStatusCode}</p>;
 
   return (
     <div>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        gutter={8}
+        toastOptions={{
+          success: {
+            duration: 3000,
+            style: {
+              background: "green",
+              color: "black",
+            },
+          },
+        }}
+      />
+      {errorStatusCode && (
+        <div className="container flex justify-center items-center mb-2 mt-1 max-w-md rounded-md px-4 py-4 w-auto mx-auto">
+          <p className="font-mono text-[#fff] bg-[#363636]">
+            Error Status Code : {errorStatusCode}
+          </p>
+        </div>
+      )}
+      {loadingApiResponse && (
+        <div className="container flex justify-center items-center mb-2 mt-1 max-w-md rounded-md px-4 py-4 w-auto mx-auto">
+          <ScaleLoader
+            height={20}
+            width={10}
+            radius={10}
+            margin={5}
+            color={"#22c55e"}
+            loading={true}
+            speedMultiplier={1}
+          />
+        </div>
+      )}
       <form className="form" onSubmit={handleSubmit}>
         <ImageFileLabel htmlFor="inputFile" labelClassName="inputFileLabel" />
         <input
