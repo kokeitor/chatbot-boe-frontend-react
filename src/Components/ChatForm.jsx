@@ -156,7 +156,7 @@ export function ChatForm() {
       />
       {errorStatusCode && (
         <div className="container flex justify-center items-center mb-2 mt-1 max-w-md rounded-md px-4 py-4 w-auto mx-auto">
-          <p className="font-mono text-[#fff] bg-[#363636]">
+          <p className="font-mono text-sm text-[#ff2828]">
             Error Status Code : {errorStatusCode}
           </p>
         </div>
@@ -168,7 +168,7 @@ export function ChatForm() {
             width={10}
             radius={10}
             margin={5}
-            color={"#22c55e"}
+            color={"#08fa30"}
             loading={true}
             speedMultiplier={1}
           />
