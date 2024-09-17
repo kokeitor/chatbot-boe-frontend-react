@@ -5,7 +5,7 @@ import { MemoryContextProvider } from "./Context/MemoryContext";
 import "./Styles/index.css";
 
 createRoot(document.getElementById("root")).render(
-    <MemoryContextProvider>
-      <App />
-    </MemoryContextProvider>
+  <MemoryContextProvider>
+    <App />
+  </MemoryContextProvider>
 );
