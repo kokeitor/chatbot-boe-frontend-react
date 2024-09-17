@@ -1,8 +1,3 @@
-import { useContext } from "react";
-import { MemoryContext } from "../Context/MemoryContext";
-import { BsRobot } from "react-icons/bs";
-import { PiUserFill } from "react-icons/pi";
-
 export function Card(props) {
   return (
     <>
