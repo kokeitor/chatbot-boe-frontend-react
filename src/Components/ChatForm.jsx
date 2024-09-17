@@ -9,7 +9,7 @@ import toast, { Toaster } from "react-hot-toast";
 function ImageFileLabel(props) {
   return (
     <label htmlFor={props.htmlFor} className={props.labelClassName}>
-      <BsFileEarmarkArrowUp size={35}/>
+      <BsFileEarmarkArrowUp size={35} />
     </label>
   );
 }
@@ -17,7 +17,7 @@ function ImageFileLabel(props) {
 function ImageButtonLabel(props) {
   return (
     <label htmlFor={props.htmlFor} className={props.labelClassName}>
-      <BsArrowUpCircle size={35}/>
+      <BsArrowUpCircle size={35} />
     </label>
   );
 }
@@ -91,13 +91,13 @@ export function ChatForm() {
     axios
       .post(urlEndpoint, userMessageApiModel)
       .then((response) => {
-        toast.success(`API response Status code : ${response.status}`)
         console.log("Api response correcta:");
         console.log(response.data);
         console.log(response.status);
         console.log(response.statusText);
         console.log(response.headers);
         console.log(response.config);
+        toast.success(`API response Status code : ${response.status}`);
         addMemory({
           userMessage: response.data.userMessage,
           iaResponse: response.data.iaResponse,
@@ -135,7 +135,10 @@ export function ChatForm() {
           files: files,
         });
       })
-      .finally(() => changeLoadingApiResponse(false));
+      .finally(() => {
+        changeLoadingApiResponse(false);
+        e.target.reset();
+      });
   };
 
   return (
