@@ -1,4 +1,4 @@
-import BOELogo from "../assets/BOE_logo.png";
+import BOELogo from "../assets/BOE_logo.svg";
 import { FaReact } from "react-icons/fa";
 import { SiVite } from "react-icons/si";
 import { FaGithub } from "react-icons/fa";
