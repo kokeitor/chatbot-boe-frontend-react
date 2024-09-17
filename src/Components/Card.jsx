@@ -1,7 +1,7 @@
 export function Card(props) {
   return (
     <>
-      <div className="text-white font-mono text-xs max-w-max bg-[#7eb481] items-center p-2 rounded-lg">
+      <div className="text-white font-mono text-xs max-w-max bg-[#545554] items-center p-2 rounded-lg">
         <div className="inline-block">
           <h1 className="font-semibold text-center">
             {props.title ? props.title : ""}
