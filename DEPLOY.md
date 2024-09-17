@@ -16,8 +16,7 @@ export default defineConfig({
 ## Git y npm commands
 
 ```sh
-npm install
-
+npm installgit add .
 npm run build
 
 git add .
