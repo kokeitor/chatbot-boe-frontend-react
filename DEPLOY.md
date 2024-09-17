@@ -1,6 +1,6 @@
 Here is the corrected version of your markdown file with the spelling and grammatical errors fixed:
 
-```markdown
+````markdown
 # Deployment Instructions on GitHub Pages
 
 ## File `vite.config.js`
@@ -12,9 +12,10 @@ import react from "@vitejs/plugin-react-swc";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: "/BOE-chatbot-react/", // Add this line
+  base: "/BOE-chatbot-react/", // Add this line : '/<REPO-NAME>/'
 });
 ```
+````
 
 ## Git and npm commands
 
@@ -42,7 +43,7 @@ import react from "@vitejs/plugin-react-swc";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: "/BOE-chatbot-react/", // Remove this line if it exists [this is for a JavaScript library to manage deployment on GitHub Pages]
+  base: "/BOE-chatbot-react/", // !!!!! Remove this line if it exists [this is for a JavaScript library to manage deployment on GitHub Pages]
 });
 ```
 
@@ -56,5 +57,7 @@ git add .
 git commit -m "message"
 git push
 ```
+
 ```
 
+```
