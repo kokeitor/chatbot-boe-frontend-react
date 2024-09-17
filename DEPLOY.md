@@ -1,6 +1,4 @@
-Here is the corrected version of your markdown file with the spelling and grammatical errors fixed:
 
-````markdown
 # Deployment Instructions on GitHub Pages
 
 ## File `vite.config.js`
@@ -15,7 +13,6 @@ export default defineConfig({
   base: "/BOE-chatbot-react/", // Add this line : '/<REPO-NAME>/'
 });
 ```
-````
 
 ## Git and npm commands
 
