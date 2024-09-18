@@ -27,6 +27,10 @@
   display: none;
 }
 
+.AbortSubmitButton {
+  display: none;
+}
+
 .inputText {
   color: black;
   font-family: Arial, sans-serif;
@@ -69,4 +73,19 @@
   opacity: 0.7; /* Slightly reduce opacity for a subtle fade effect */
   transform: scale(1.1); /* Scale the logo slightly to create a zoom effect */
   color: #08fa30;
+}
+
+.AbortSubmitButtonLabel {
+  transition: transform 0.2s ease, opacity 0.2s ease; /* Ensure smooth transitions */
+  padding: 10px;
+  border-radius: 5px;
+  color: #f21313;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.AbortSubmitButtonLabel:hover {
+  opacity: 0.7; /* Slightly reduce opacity for a subtle fade effect */
+  transform: scale(1.1); /* Scale the logo slightly to create a zoom effect */
+  color: #f21313;
 }

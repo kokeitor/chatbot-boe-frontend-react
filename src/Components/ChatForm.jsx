@@ -6,6 +6,7 @@ import { useState, useEffect, useContext } from "react";
 import { MemoryContext } from "../Context/MemoryContext";
 import { modelApi } from "../Apis/modelApi";
 import toast, { Toaster } from "react-hot-toast";
+import { MdOutlineStopCircle } from "react-icons/md";
 
 function ImageFileLabel(props) {
   return (
@@ -23,6 +24,14 @@ function ImageButtonLabel(props) {
   );
 }
 
+function AbortImageButtonLabel(props) {
+  return (
+    <label htmlFor={props.htmlFor} className={props.labelClassName}>
+      <MdOutlineStopCircle size={35} />
+    </label>
+  );
+}
+
 export function ChatForm() {
   // from useContext
   const { addMemory } = useContext(MemoryContext);
@@ -34,6 +43,7 @@ export function ChatForm() {
   const [userMessage, setUserMessage] = useState("");
   const [files, setFiles] = useState([]);
   const multipleFilesFlag = true;
+  const [abortController, setAbortController] = useState(null);
 
   // useEffect to show toaster component error
   useEffect(() => {
@@ -68,6 +78,42 @@ export function ChatForm() {
     console.log(e);
     e.preventDefault();
 
+    // Custom toast function for showing the uploaded server files
+    const customToast = (t) => (
+      <div
+        className={`${
+          t.visible ? "animate-enter" : "animate-leave"
+        } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+      >
+        <div className="flex-1 w-0 p-4">
+          <div className="flex items-start">
+            <div className="ml-3 flex-1">
+              <p className="text-sm font-mono font-bold text-[#08fa30]">
+                Archivos subidos con éxito
+              </p>
+              {files.map(function showFiles(f, index) {
+                return (
+                  <p
+                    className="mt-1 text-sm font-mono text-gray-500"
+                    key={index}
+                  >
+                    {f.name}
+                  </p>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+        <div className="flex border-l border-gray-200">
+          <button
+            onClick={() => toast.dismiss(t.id)}
+            className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-bold text-[#2a63ff] hover:text-[#6d93fc] focus:text-[#6d93fc] hover:bg-[#e0edff] focus:bg-[#d6e4ff] focus:outline-none focus:ring-2"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
+    );
     // Necessary request params
     const baseUrl = import.meta.env.VITE_BACK_END_BASE_URL;
     const urlEndpoint = import.meta.env.VITE_BACK_END_ENDPOINT_1;
@@ -86,11 +132,16 @@ export function ChatForm() {
     formData.keys().forEach((key) => console.log(key));
     formData.values().forEach((val) => console.log(val));
 
+    // handle abort controller object set to be used in the abort button
+    const controller = new AbortController();
+    setAbortController(controller);
+
     // Axios Configuration Request
     const axiosConfigRequest = {
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      signal: controller.signal,
     };
 
     // Post request to API endpoint
@@ -105,41 +156,7 @@ export function ChatForm() {
         console.log(response.config);
         toast.success(`API response Status code : ${response.status}`);
         if (files.length > 0) {
-          toast.custom((t) => (
-            <div
-              className={`${
-                t.visible ? "animate-enter" : "animate-leave"
-              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
-            >
-              <div className="flex-1 w-0 p-4">
-                <div className="flex items-start">
-                  <div className="ml-3 flex-1">
-                    <p className="text-sm font-mono font-bold text-[#08fa30]">
-                      Archivos subidos con éxito
-                    </p>
-                    {files.map(function showFiles(f, index) {
-                      return (
-                        <p
-                          className="mt-1 text-sm font-mono text-gray-500"
-                          key={index}
-                        >
-                          {f.name}
-                        </p>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-              <div className="flex border-l border-gray-200">
-                <button
-                  onClick={() => toast.dismiss(t.id)}
-                  className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-bold text-[#2a63ff] hover:text-[#6d93fc] focus:text-[#6d93fc] hover:bg-[#e0edff] focus:bg-[#d6e4ff] focus:outline-none focus:ring-2"
-                >
-                  Cerrar
-                </button>
-              </div>
-            </div>
-          ));
+          toast.custom(customToast);
         }
         addMemory({
           userMessage: response.data.userMessage,
@@ -170,8 +187,11 @@ export function ChatForm() {
           );
         }
         console.log(error.config);
-        console.log(error.toJSON());
-        setErrorStatus(error.response.status);
+        try {
+          setErrorStatus(error.response.status);
+        } catch (e) {
+          setErrorStatus(`Error Status code Undefined : ${e}`);
+        }
         addMemory({
           userMessage: userMessage,
           iaResponse: "IA Model API Error Response : " + error.message,
@@ -182,6 +202,7 @@ export function ChatForm() {
         changeLoadingApiResponse(false);
         setFiles([]);
         setUserMessage("");
+        setAbortController(null);
         e.target.reset();
       });
   };
@@ -209,7 +230,9 @@ export function ChatForm() {
       {errorStatusCode && (
         <div className="container flex justify-center items-center mb-2 mt-1 max-w-md rounded-md px-4 py-4 w-auto mx-auto">
           <p className="font-mono text-sm text-[#ff2828]">
-            Error Status Code : {errorStatusCode}
+            {errorStatusCode
+              ? `Error Status Code : ${errorStatusCode}`
+              : "Error API model Request"}
           </p>
         </div>
       )}
@@ -253,11 +276,47 @@ export function ChatForm() {
             setUserMessage(e.target.value);
           }}
         />
-        <ImageButtonLabel
-          htmlFor="SubmitButton"
-          labelClassName="submitButtonLabel"
-        />
-        <button type="submit" id="SubmitButton" className="SubmitButton" />
+        {loadingApiResponse ? (
+          <>
+            <AbortImageButtonLabel
+              htmlFor="AbortSubmitButton"
+              labelClassName="AbortSubmitButtonLabel"
+            />
+            <button
+              type="submit"
+              id="AbortSubmitButton"
+              className="AbortSubmitButton"
+              onClick={() => {
+                if (abortController) {
+                  abortController.abort();
+                  toast("Mensaje cancelado", {
+                    position: "top-right",
+                    icon: "⛔",
+                    style: {
+                      borderRadius: "10px",
+                      background: "#333",
+                      color: "#fff",
+                    },
+                  });
+                  changeLoadingApiResponse(false);
+                  setFiles([]);
+                  setUserMessage("");
+                  setAbortController(null);
+                } else {
+                  console.log("Error on the cancelation of the post request");
+                }
+              }}
+            />
+          </>
+        ) : (
+          <>
+            <ImageButtonLabel
+              htmlFor="SubmitButton"
+              labelClassName="submitButtonLabel"
+            />
+            <button type="submit" id="SubmitButton" className="SubmitButton" />
+          </>
+        )}
       </form>
     </div>
   );
