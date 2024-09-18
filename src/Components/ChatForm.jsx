@@ -4,6 +4,7 @@ import "../Styles/chat-form.css";
 import ScaleLoader from "react-spinners/ClipLoader";
 import { useState, useEffect, useContext } from "react";
 import { MemoryContext } from "../Context/MemoryContext";
+import { modelApi } from "../Apis/modelApi";
 import toast, { Toaster } from "react-hot-toast";
 
 function ImageFileLabel(props) {
@@ -65,8 +66,10 @@ export function ChatForm() {
     e.preventDefault();
 
     // Necessary request params
-    const urlEndpoint = import.meta.env.VITE_BACK_END_ENDPOINT;
-    console.log(`BACK_END_ENDPOINT : ${urlEndpoint}`);
+    const baseUrl = import.meta.env.VITE_BACK_END_BASE_URL;
+    const urlEndpoint = import.meta.env.VITE_BACK_END_ENDPOINT_1;
+    console.log(`BACK_END_BASE_URL : ${baseUrl}`);
+    console.log(`BACK_END_ENDPOINT_1 : ${urlEndpoint}`);
     const userMessageApiModel = {
       userMessage: userMessage,
       files: files,
@@ -88,8 +91,9 @@ export function ChatForm() {
     //   files: data.files,
     // });
     //
-    axios
-      .post(urlEndpoint, userMessageApiModel)
+    // axios
+    modelApi
+      .post(urlEndpoint,userMessageApiModel)
       .then((response) => {
         console.log("Api response correcta:");
         console.log(response.data);
