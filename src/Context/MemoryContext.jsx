@@ -9,9 +9,11 @@ export function MemoryContextProvider(props) {
 
   // Use effect function to log the context var changes
   useEffect(() => {
-    chatMemory.forEach((m) =>
+    chatMemory.forEach((m, index) =>
       console.log(
-        `Memory --> IA: ${m.iaResponse} -- User Message: ${m.userMessage} -- Files: ${m.files}`
+        `Memory ${index + 1} --> IA: ${m.iaResponse} -- User Message: ${
+          m.userMessage
+        } -- Files: ${m.files}`
       )
     );
   }, [chatMemory]);

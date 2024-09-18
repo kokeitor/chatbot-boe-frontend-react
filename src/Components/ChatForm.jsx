@@ -74,12 +74,17 @@ export function ChatForm() {
     console.log(`BACK_END_BASE_URL : ${baseUrl}`);
     console.log(`BACK_END_ENDPOINT_1 : ${urlEndpoint}`);
 
-    // Back-End expected nodel body params : ploadFiles and userMessage
+    // Back-End expected model body params : uploadFiles and userMessage
     const formData = new FormData();
     formData.append("userMessage", userMessage);
     files.forEach((file) => {
       formData.append("uploadFiles", file);
     });
+
+    // logs of the form data content object send to the api endpoint
+    console.log(formData);
+    formData.keys().forEach((key) => console.log(key));
+    formData.values().forEach((val) => console.log(val));
 
     // Axios Configuration Request
     const axiosConfigRequest = {
