@@ -190,7 +190,7 @@ export function ChatForm() {
         try {
           setErrorStatus(error.response.status);
         } catch (e) {
-          setErrorStatus(`Error Status code Undefined : ${e}`);
+          setErrorStatus(`Undefined -> ${e}`);
         }
         addMemory({
           userMessage: userMessage,
