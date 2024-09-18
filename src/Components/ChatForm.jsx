@@ -173,25 +173,23 @@ export function ChatForm() {
           console.log(error.response.data);
           console.log(error.response.status);
           console.log(error.response.headers);
+          setErrorStatus(error.response.status);
         } else if (error.request) {
           // La petición fue hecha pero no se recibió respuesta
           // `error.request` es una instancia de XMLHttpRequest en el navegador y una instancia de
           // http.ClientRequest en node.js
           console.log("error.request : ");
           console.log(error.request);
+          setErrorStatus(error.request);
         } else {
           // Algo paso al preparar la petición que lanzo un Error
           console.log(
             "Algo paso al preparar la petición que lanzo un Error : ",
             error.message
           );
+          setErrorStatus(error.message);
         }
         console.log(error.config);
-        try {
-          setErrorStatus(error.response.status);
-        } catch (e) {
-          setErrorStatus(`Undefined -> ${e}`);
-        }
         addMemory({
           userMessage: userMessage,
           iaResponse: "IA Model API Error Response : " + error.message,
