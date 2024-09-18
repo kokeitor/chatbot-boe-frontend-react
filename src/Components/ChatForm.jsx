@@ -56,8 +56,8 @@ export function ChatForm() {
   // useEffect Log the files whenever they change
   useEffect(() => {
     files.forEach((f, index) => {
-      console.log(`Input file name ${index} : ${f.name}`);
-      console.log(`Input file objet ${index} : ${f}`);
+      console.log(`Input file ${index} name : ${f.name}`);
+      console.log(`Input file ${index} objet : ${f}`);
     });
   }, [files]);
 
@@ -74,37 +74,23 @@ export function ChatForm() {
     console.log(`BACK_END_BASE_URL : ${baseUrl}`);
     console.log(`BACK_END_ENDPOINT_1 : ${urlEndpoint}`);
 
-    // FormData object with the upload files
-    const formDataFiles = new FormData();
+    // Back-End expected nodel body params : ploadFiles and userMessage
+    const formData = new FormData();
+    formData.append("userMessage", userMessage);
     files.forEach((file) => {
-      formDataFiles.append("uploadFiles", file);
+      formData.append("uploadFiles", file);
     });
 
-    // Back-End expected model for userMessage
-    const userMessageApiModel = {
-      userMessage: userMessage,
-      uploadFiles: formDataFiles,
+    // Axios Configuration Request
+    const axiosConfigRequest = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     };
 
-    // using fetch
-    //const headers = {
-    //  method: "POST",
-    //  body: JSON.stringify(userMessageApiModel),
-    //  headers: { "Content-type": "application/json" },
-    //};
-    // const response = await fetch(urlEndpoint, headers);
-    // const data = await response.json();
-    // console.log(data);
-    // manage API response and adding response to memory context
-    // addMemory({
-    //   userMessage: data.userMessage,
-    //   iaResponse: data.iaResponse,
-    //   files: data.files,
-    // });
-    //
-    // axios
+    // Post request to API endpoint
     modelApi
-      .post(urlEndpoint, userMessageApiModel)
+      .post(urlEndpoint, formData, axiosConfigRequest)
       .then((response) => {
         console.log("Api response correcta:");
         console.log(response.data);
@@ -113,6 +99,43 @@ export function ChatForm() {
         console.log(response.headers);
         console.log(response.config);
         toast.success(`API response Status code : ${response.status}`);
+        if (files.length > 0) {
+          toast.custom((t) => (
+            <div
+              className={`${
+                t.visible ? "animate-enter" : "animate-leave"
+              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            >
+              <div className="flex-1 w-0 p-4">
+                <div className="flex items-start">
+                  <div className="ml-3 flex-1">
+                    <p className="text-sm font-mono font-bold text-[#08fa30]">
+                      Archivos subidos con éxito
+                    </p>
+                    {files.map(function showFiles(f, index) {
+                      return (
+                        <p
+                          className="mt-1 text-sm font-mono text-gray-500"
+                          key={index}
+                        >
+                          {f.name}
+                        </p>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+              <div className="flex border-l border-gray-200">
+                <button
+                  onClick={() => toast.dismiss(t.id)}
+                  className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-bold text-[#2a63ff] hover:text-[#6d93fc] focus:text-[#6d93fc] hover:bg-[#e0edff] focus:bg-[#d6e4ff] focus:outline-none focus:ring-2"
+                >
+                  Cerrar
+                </button>
+              </div>
+            </div>
+          ));
+        }
         addMemory({
           userMessage: response.data.userMessage,
           iaResponse: response.data.iaResponse,
@@ -152,6 +175,8 @@ export function ChatForm() {
       })
       .finally(() => {
         changeLoadingApiResponse(false);
+        setFiles([]);
+        setUserMessage("");
         e.target.reset();
       });
   };
@@ -159,16 +184,20 @@ export function ChatForm() {
   return (
     <div>
       <Toaster
-        position="top-center"
         reverseOrder={false}
         gutter={8}
         toastOptions={{
           success: {
+            position: "top-right",
             duration: 3000,
             style: {
               background: "green",
-              color: "black",
+              color: "white",
             },
+          },
+          custom: {
+            duration: 80000,
+            position: "top-left",
           },
         }}
       />
