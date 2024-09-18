@@ -55,7 +55,10 @@ export function ChatForm() {
 
   // useEffect Log the files whenever they change
   useEffect(() => {
-    console.log(`Input files : ${files}`);
+    files.forEach((f, index) => {
+      console.log(`Input file name ${index} : ${f.name}`);
+      console.log(`Input file objet ${index} : ${f}`);
+    });
   }, [files]);
 
   // Submit handle function --> post method backend
@@ -70,9 +73,17 @@ export function ChatForm() {
     const urlEndpoint = import.meta.env.VITE_BACK_END_ENDPOINT_1;
     console.log(`BACK_END_BASE_URL : ${baseUrl}`);
     console.log(`BACK_END_ENDPOINT_1 : ${urlEndpoint}`);
+
+    // FormData object with the upload files
+    const formDataFiles = new FormData();
+    files.forEach((file) => {
+      formDataFiles.append("uploadFiles", file);
+    });
+
+    // Back-End expected model for userMessage
     const userMessageApiModel = {
       userMessage: userMessage,
-      files: files,
+      uploadFiles: formDataFiles,
     };
 
     // using fetch
@@ -93,7 +104,7 @@ export function ChatForm() {
     //
     // axios
     modelApi
-      .post(urlEndpoint,userMessageApiModel)
+      .post(urlEndpoint, userMessageApiModel)
       .then((response) => {
         console.log("Api response correcta:");
         console.log(response.data);
@@ -190,10 +201,10 @@ export function ChatForm() {
           multiple={multipleFilesFlag}
           className="inputFile"
           onChange={(event) => {
-            const selectedFiles = Array.from(event.target.files).map(
-              (file) => file.name
-            );
-            setFiles(selectedFiles);
+            //const selectedFiles = Array.from(event.target.files).map(
+            //  (file) => file.name
+            //);
+            setFiles(Array.from(event.target.files));
           }}
         />
         <input

@@ -3,7 +3,7 @@ export function Card(props) {
     <>
       <div className="text-white font-mono text-xs max-w-max bg-[#acacac] items-center p-2 rounded-lg">
         <div className="inline-block px-1 py-1">
-          <h1 className="font-semibold text-sm text-center mt-1 mb-4">
+          <h1 className="font-semibold text-sm text-center mt-1 mb-2">
             {props.title ? props.title : ""}
           </h1>
           <p className="text-center hover:font-bold">
