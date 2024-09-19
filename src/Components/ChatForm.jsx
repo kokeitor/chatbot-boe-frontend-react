@@ -34,10 +34,14 @@ function AbortImageButtonLabel(props) {
 
 export function ChatForm() {
   // from useContext
-  const { addMemory } = useContext(MemoryContext);
-  const { errorStatusCode, setErrorStatus } = useContext(MemoryContext);
-  const { loadingApiResponse, changeLoadingApiResponse } =
-    useContext(MemoryContext);
+  const {
+    restartMemory,
+    addMemory,
+    errorStatusCode,
+    setErrorStatus,
+    loadingApiResponse,
+    changeLoadingApiResponse,
+  } = useContext(MemoryContext);
 
   // from useState
   const [userMessage, setUserMessage] = useState("");
@@ -179,8 +183,8 @@ export function ChatForm() {
           // `error.request` es una instancia de XMLHttpRequest en el navegador y una instancia de
           // http.ClientRequest en node.js
           console.log("error.request : ");
-          console.log(error.request);
-          setErrorStatus(error.request);
+          console.log(error.request.statusText);
+          setErrorStatus(error.request.status);
         } else {
           // Algo paso al preparar la petición que lanzo un Error
           console.log(
@@ -225,15 +229,11 @@ export function ChatForm() {
           },
         }}
       />
-      {errorStatusCode && (
-        <div className="container flex justify-center items-center mb-2 mt-1 max-w-md rounded-md px-4 py-4 w-auto mx-auto">
-          <p className="font-mono text-sm text-[#ff2828]">
-            {errorStatusCode
-              ? `Error Status Code : ${errorStatusCode}`
-              : "Error API model Request"}
-          </p>
-        </div>
-      )}
+      <div className="container flex justify-center items-center mb-2 mt-1 max-w-md rounded-md px-4 py-4 w-auto mx-auto">
+        <p className="font-mono text-sm text-[#ff2828]">
+          {errorStatusCode ? `Error Status Code : ${errorStatusCode}` : ""}
+        </p>
+      </div>
       {loadingApiResponse && (
         <div className="container flex justify-center items-center mb-2 mt-1 max-w-md rounded-md px-4 py-4 w-auto mx-auto">
           <ScaleLoader
@@ -296,13 +296,14 @@ export function ChatForm() {
                       color: "#fff",
                     },
                   });
-                  changeLoadingApiResponse(false);
-                  setFiles([]);
-                  setUserMessage("");
-                  setAbortController(null);
                 } else {
                   console.log("Error on the cancelation of the post request");
                 }
+                setErrorStatus(null);
+                setAbortController(null);
+                changeLoadingApiResponse(false);
+                setFiles([]);
+                setUserMessage("");
               }}
             />
           </>
