@@ -10,6 +10,7 @@ import pineconeLogoSrc from "../assets/pinecone_logo.jpg";
 import { useEffect, useState } from "react";
 import { modelApi } from "../Apis/modelApi";
 import { saveAs } from "file-saver";
+import { NavBar } from "./NavBar";
 
 function DevPage() {
   const [diagram1, setDiagram1] = useState();
@@ -133,6 +134,7 @@ function DevPage() {
   };
   return (
     <main className="h-auto w-full bg-neutral-700">
+      <NavBar />
       <div className="h-min w-auto rounded-lg grid grid-cols-7 gap-4 px-4 py-4">
         <Card
           href="https://es.react.dev/"

@@ -27,7 +27,7 @@ function App() {
         <ChatForm />
         <MemoryRestartButton />
       </div>
-      <CopyRightFooter/>
+      <CopyRightFooter />
     </main>
   );
 }
