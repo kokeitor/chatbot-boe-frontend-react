@@ -39,6 +39,23 @@ export function ChatForm() {
   const [files, setFiles] = useState([]);
   const [abortController, setAbortController] = useState(null);
 
+  // vars from useContext
+  const {
+    restartMemory,
+    addMemory,
+    errorStatusCode,
+    setErrorStatus,
+    loadingApiResponse,
+    changeLoadingApiResponse,
+  } = useContext(ChatContext);
+
+  // local constant vars
+  const multipleFilesFlag = true;
+
+  // Necessary request params
+  const baseUrl = import.meta.env.VITE_BACK_END_BASE_URL;
+  const urlEndpoint = import.meta.env.VITE_BACK_END_ENDPOINT_1;
+
   // useEffect to show toaster component error
   useEffect(() => {
     if (errorStatusCode) {
@@ -62,23 +79,6 @@ export function ChatForm() {
       console.log(`Input file ${index} objet : ${f}`);
     });
   }, [files]);
-
-  // vars from useContext
-  const {
-    restartMemory,
-    addMemory,
-    errorStatusCode,
-    setErrorStatus,
-    loadingApiResponse,
-    changeLoadingApiResponse,
-  } = useContext(ChatContext);
-
-  // local constant vars
-  const multipleFilesFlag = true;
-
-  // Necessary request params
-  const baseUrl = import.meta.env.VITE_BACK_END_BASE_URL;
-  const urlEndpoint = import.meta.env.VITE_BACK_END_ENDPOINT_1;
 
   // Submit handle function --> post method backend
   const handleSubmit = async (e, customToast, baseUrl, urlEndpoint) => {
