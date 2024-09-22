@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { MemoryContext } from "../Context/ChatContext";
+import { ChatContext } from "../Context/ChatContext";
 import { BsRobot } from "react-icons/bs";
 import { PiUserFill } from "react-icons/pi";
 
