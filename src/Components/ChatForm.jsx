@@ -2,8 +2,9 @@ import { BsArrowUpCircle, BsFileEarmarkArrowUp } from "react-icons/bs";
 import "../Styles/chat-form.css";
 import ScaleLoader from "react-spinners/ClipLoader";
 import { useState, useEffect, useContext } from "react";
-import { MemoryContext } from "../Context/MemoryContext";
+import { ChatContext } from "../Context/ChatContext";
 import { modelApi } from "../Apis/modelApi";
+import { handleFormSubmit } from "../Handlers/handlers";
 import { FilesCustomToast } from "./FilesCustomToast";
 import toast, { Toaster } from "react-hot-toast";
 import { MdOutlineStopCircle } from "react-icons/md";
@@ -35,45 +36,29 @@ function AbortImageButtonLabel(props) {
 export function ChatForm() {
   // from useContext
   const {
+    userMessage,
+    setUserMessage,
+    files,
+    setFiles,
     restartMemory,
     addMemory,
     errorStatusCode,
     setErrorStatus,
     loadingApiResponse,
     changeLoadingApiResponse,
-  } = useContext(MemoryContext);
+  } = useContext(ChatContext);
 
   // from useState
-  const [userMessage, setUserMessage] = useState("");
-  const [files, setFiles] = useState([]);
+  // const [userMessage, setUserMessage] = useState("");
+  // const [files, setFiles] = useState([]);
   const multipleFilesFlag = true;
   const [abortController, setAbortController] = useState(null);
 
-  // useEffect to show toaster component error
-  useEffect(() => {
-    if (errorStatusCode) {
-      toast.error(`Error Status Code : ${errorStatusCode}`, {
-        duration: 5000,
-        style: {
-          background: "#363636",
-          color: "#fff",
-        },
-      });
-    }
-  }, [errorStatusCode]);
-
-  // useEffect to Log the userMessage whenever they change
-  useEffect(() => {
-    console.log(`User message : ${userMessage}`);
-  }, [userMessage]);
-
-  // useEffect Log the files whenever they change
-  useEffect(() => {
-    files.forEach((f, index) => {
-      console.log(`Input file ${index} name : ${f.name}`);
-      console.log(`Input file ${index} objet : ${f}`);
-    });
-  }, [files]);
+  // Necessary request params
+  const baseUrl = import.meta.env.VITE_BACK_END_BASE_URL;
+  const urlEndpoint = import.meta.env.VITE_BACK_END_ENDPOINT_1;
+  console.log(`BACK_END_BASE_URL : ${baseUrl}`);
+  console.log(`BACK_END_ENDPOINT_1 : ${urlEndpoint}`);
 
   // Submit handle function --> post method backend
   const handleSubmit = async (e, customToast) => {
@@ -213,7 +198,7 @@ export function ChatForm() {
       )}
       <form
         className="form"
-        onSubmit={(e) => handleSubmit(e, FilesCustomToast)}
+        onSubmit={(e) => handleFormSubmit(e, FilesCustomToast, urlEndpoint)}
       >
         <ImageFileLabel htmlFor="inputFile" labelClassName="inputFileLabel" />
         <input

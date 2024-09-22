@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { MemoryContext } from "../Context/MemoryContext";
+import { ChatContext } from "../Context/ChatContext";
 import { modelApi } from "../Apis/modelApi";
 import { Toaster, toast } from "react-hot-toast";
 
@@ -11,7 +11,7 @@ export function MemoryRestartButton() {
     setErrorStatus,
     loadingApiResponse,
     changeLoadingApiResponse,
-  } = useContext(MemoryContext);
+  } = useContext(ChatContext);
 
   const restartMemoryText = "Borrar chat";
   const handleOnClick = (e) => {

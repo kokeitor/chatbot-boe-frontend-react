@@ -7,11 +7,9 @@ import { FaNodeJs } from "react-icons/fa";
 import { SiLangchain } from "react-icons/si";
 import { SiHuggingface } from "react-icons/si";
 import pineconeLogoSrc from "../assets/pinecone_logo.jpg";
-import { useEffect, useState } from "react";
-import { modelApi } from "../Apis/modelApi";
+import { useState } from "react";
 import { useFetchDiagrams } from "../Hooks/useFetchDiagrams";
 import { handleDownloadTfmPdf } from "../Handlers/handlers";
-import { saveAs } from "file-saver";
 import { NavBar } from "./NavBar";
 
 function DevPage() {

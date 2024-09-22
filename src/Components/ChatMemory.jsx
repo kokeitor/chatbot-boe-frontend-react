@@ -1,10 +1,10 @@
 import { useContext } from "react";
-import { MemoryContext } from "../Context/MemoryContext";
+import { MemoryContext } from "../Context/ChatContext";
 import { BsRobot } from "react-icons/bs";
 import { PiUserFill } from "react-icons/pi";
 
 export function ChatMemory() {
-  const { chatMemory } = useContext(MemoryContext);
+  const { chatMemory } = useContext(ChatContext);
   const emptyMemory = "BOE CHAT";
   const titleMemory = "BOE CHAT";
 
