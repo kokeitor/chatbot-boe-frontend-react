@@ -45,7 +45,7 @@ function DevPage() {
     <main className="h-auto w-full bg-neutral-700">
       <NavBar />
       <div className="flex justify-center items-center mt-12">
-        <p className=" bg-[#acacac] rounded-lg hover:scale-105 font-bold text-lg text-white font-mono py-2 px-2">
+        <p className="bg-[#acacac] rounded-lg hover:scale-105 font-bold text-lg text-white font-mono py-2 px-2">
           Technologies
         </p>
       </div>
@@ -113,7 +113,7 @@ function DevPage() {
       <div className="flex justify-center items-center">
         <button
           onClick={() => handleDownloadTfmPdf(setTfmLoading, urlEndpointTfm)}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-mono font-bold py-2 px-4 rounded"
           disabled={tfmLoading}
         >
           {tfmLoading
@@ -122,8 +122,16 @@ function DevPage() {
         </button>
       </div>
       <div className="flex justify-center items-center mt-4 mb-6 py-4 px-4">
-        {loadingDiagram1 && <p className="text-white">Loading diagram 1...</p>}
-        {loadingDiagram2 && <p className="text-white">Loading diagram 2...</p>}
+        {loadingDiagram1 && (
+          <p className="bg-[#acacac] rounded-lg font-bold text-sm text-white font-mono py-2 px-2">
+            Loading diagram 1...
+          </p>
+        )}
+        {loadingDiagram2 && (
+          <p className="bg-[#acacac] rounded-lg font-bold text-sm text-white font-mono py-2 px-2">
+            Loading diagram 2...
+          </p>
+        )}
         {diagram1 && (
           <img
             src={diagram1}

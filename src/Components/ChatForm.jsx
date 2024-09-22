@@ -1,10 +1,10 @@
 import { BsArrowUpCircle, BsFileEarmarkArrowUp } from "react-icons/bs";
-import axios from "axios";
 import "../Styles/chat-form.css";
 import ScaleLoader from "react-spinners/ClipLoader";
 import { useState, useEffect, useContext } from "react";
 import { MemoryContext } from "../Context/MemoryContext";
 import { modelApi } from "../Apis/modelApi";
+import { FilesCustomToast } from "./FilesCustomToast";
 import toast, { Toaster } from "react-hot-toast";
 import { MdOutlineStopCircle } from "react-icons/md";
 
@@ -76,48 +76,12 @@ export function ChatForm() {
   }, [files]);
 
   // Submit handle function --> post method backend
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, customToast) => {
     changeLoadingApiResponse(true);
     setErrorStatus(null);
     console.log(e);
     e.preventDefault();
 
-    // Custom toast function for showing the uploaded server files
-    const customToast = (t) => (
-      <div
-        className={`${
-          t.visible ? "animate-enter" : "animate-leave"
-        } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
-      >
-        <div className="flex-1 w-0 p-4">
-          <div className="flex items-start">
-            <div className="ml-3 flex-1">
-              <p className="text-sm font-mono font-bold text-[#08fa30]">
-                Archivos subidos con éxito
-              </p>
-              {files.map(function showFiles(f, index) {
-                return (
-                  <p
-                    className="mt-1 text-sm font-mono text-gray-500"
-                    key={index}
-                  >
-                    {f.name}
-                  </p>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-        <div className="flex border-l border-gray-200">
-          <button
-            onClick={() => toast.dismiss(t.id)}
-            className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-bold text-[#2a63ff] hover:text-[#6d93fc] focus:text-[#6d93fc] hover:bg-[#e0edff] focus:bg-[#d6e4ff] focus:outline-none focus:ring-2"
-          >
-            Cerrar
-          </button>
-        </div>
-      </div>
-    );
     // Necessary request params
     const baseUrl = import.meta.env.VITE_BACK_END_BASE_URL;
     const urlEndpoint = import.meta.env.VITE_BACK_END_ENDPOINT_1;
@@ -160,7 +124,7 @@ export function ChatForm() {
         console.log(response.config);
         toast.success(`API response Status code : ${response.status}`);
         if (files.length > 0) {
-          toast.custom(customToast);
+          toast.custom((t) => customToast(t, files));
         }
         addMemory({
           userMessage: response.data.userMessage,
@@ -247,7 +211,10 @@ export function ChatForm() {
           />
         </div>
       )}
-      <form className="form" onSubmit={handleSubmit}>
+      <form
+        className="form"
+        onSubmit={(e) => handleSubmit(e, FilesCustomToast)}
+      >
         <ImageFileLabel htmlFor="inputFile" labelClassName="inputFileLabel" />
         <input
           type="file"
@@ -256,9 +223,6 @@ export function ChatForm() {
           multiple={multipleFilesFlag}
           className="inputFile"
           onChange={(event) => {
-            //const selectedFiles = Array.from(event.target.files).map(
-            //  (file) => file.name
-            //);
             setFiles(Array.from(event.target.files));
           }}
         />
