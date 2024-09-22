@@ -34,12 +34,37 @@ function AbortImageButtonLabel(props) {
 }
 
 export function ChatForm() {
-  // from useContext
+  // vars from usestsate
+  const [userMessage, setUserMessage] = useState("");
+  const [files, setFiles] = useState([]);
+  const [abortController, setAbortController] = useState(null);
+
+  // useEffect to show toaster component error
+  useEffect(() => {
+    if (errorStatusCode) {
+      toast.error(`Error Status Code : ${errorStatusCode}`, {
+        duration: 5000,
+        style: {
+          background: "#363636",
+          color: "#fff",
+        },
+      });
+    }
+  }, [errorStatusCode]);
+
+  // useEffect to log changes on var from usestate values
+  useEffect(() => {
+    console.log(`User message : ${userMessage}`);
+  }, [userMessage]);
+  useEffect(() => {
+    files.forEach((f, index) => {
+      console.log(`Input file ${index} name : ${f.name}`);
+      console.log(`Input file ${index} objet : ${f}`);
+    });
+  }, [files]);
+
+  // vars from useContext
   const {
-    userMessage,
-    setUserMessage,
-    files,
-    setFiles,
     restartMemory,
     addMemory,
     errorStatusCode,
@@ -48,26 +73,20 @@ export function ChatForm() {
     changeLoadingApiResponse,
   } = useContext(ChatContext);
 
-  // from useState
-  // const [userMessage, setUserMessage] = useState("");
-  // const [files, setFiles] = useState([]);
+  // local constant vars
   const multipleFilesFlag = true;
-  const [abortController, setAbortController] = useState(null);
 
   // Necessary request params
   const baseUrl = import.meta.env.VITE_BACK_END_BASE_URL;
   const urlEndpoint = import.meta.env.VITE_BACK_END_ENDPOINT_1;
 
   // Submit handle function --> post method backend
-  const handleSubmit = async (e, customToast) => {
+  const handleSubmit = async (e, customToast, baseUrl, urlEndpoint) => {
     changeLoadingApiResponse(true);
     setErrorStatus(null);
     console.log(e);
     e.preventDefault();
 
-    // Necessary request params
-    const baseUrl = import.meta.env.VITE_BACK_END_BASE_URL;
-    const urlEndpoint = import.meta.env.VITE_BACK_END_ENDPOINT_1;
     console.log(`BACK_END_BASE_URL : ${baseUrl}`);
     console.log(`BACK_END_ENDPOINT_1 : ${urlEndpoint}`);
 
@@ -196,7 +215,9 @@ export function ChatForm() {
       )}
       <form
         className="form"
-        onSubmit={(e) => handleFormSubmit(e, FilesCustomToast, urlEndpoint)}
+        onSubmit={(e) =>
+          handleSubmit(e, FilesCustomToast, baseUrl, urlEndpoint)
+        }
       >
         <ImageFileLabel htmlFor="inputFile" labelClassName="inputFileLabel" />
         <input
