@@ -36,12 +36,16 @@ function AbortImageButtonLabel(props) {
 export function ChatForm() {
   // vars from usestsate
   const [userMessage, setUserMessage] = useState("");
+  const [iaResponse, setIaResponse] = useState("");
   const [files, setFiles] = useState([]);
   const [abortController, setAbortController] = useState(null);
+  const [streamMode, setStreamMode] = useState("stream");
+  const [urlEndpoint, setUrlEndpoint] = useState(
+    import.meta.env.VITE_BACK_END_ENDPOINT_STREAM
+  );
 
   // vars from useContext
   const {
-    restartMemory,
     addMemory,
     errorStatusCode,
     setErrorStatus,
@@ -54,7 +58,6 @@ export function ChatForm() {
 
   // Necessary request params
   const baseUrl = import.meta.env.VITE_BACK_END_BASE_URL;
-  const urlEndpoint = import.meta.env.VITE_BACK_END_ENDPOINT_1;
 
   // useEffect to show toaster component error
   useEffect(() => {
@@ -80,8 +83,81 @@ export function ChatForm() {
     });
   }, [files]);
 
+  // Submit Stream handle function
+  const handleStreamSubmit = async (e, customToast, baseUrl) => {
+    changeLoadingApiResponse(true);
+    setErrorStatus(null);
+    console.log(e);
+    e.preventDefault();
+
+    // logs
+    console.log(`BACK_END_ENDPOINT_SREAM ${urlEndpoint}`);
+
+    try {
+      // Back-End FastAPI expected model body params : uploadFiles and userMessage
+      const formData = new FormData();
+      formData.append("userMessage", userMessage);
+      files.forEach((file) => {
+        formData.append("uploadFiles", file);
+      });
+
+      // logs of the form data content object send to the api endpoint
+      console.log(formData);
+      formData.keys().forEach((key) => console.log(key));
+      formData.values().forEach((val) => console.log(val));
+
+      // handle abort controller object set to be used in the abort button
+      const controller = new AbortController();
+      setAbortController(controller);
+
+      // Axios Configuration Request
+      const fetchStreamConfig = {
+        method: "POST",
+        body: formData, // Sending form data
+        signal: controller.signal,
+      };
+
+      const response = await fetch(baseUrl + urlEndpoint, fetchStreamConfig);
+
+      if (!response.ok) {
+        setErrorStatus(response.status);
+        throw new Error(`HTTP Streaming error! status: ${response.status}`);
+      }
+
+      toast.success(`API Streaming response Status code : ${response.status}`);
+      if (files.length > 0) {
+        toast.custom((t) => customToast(t, files));
+      }
+
+      // Handle the stream using the reader
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder("utf-8");
+
+      let result = "";
+      let done = false;
+      while (!done) {
+        const { value, done: streamDone } = await reader.read();
+        done = streamDone;
+        result += decoder.decode(value, { stream: true });
+
+        // Update the IA response incrementally
+        setIaResponse((prev) => prev + decoder.decode(value, { stream: true }));
+      }
+      console.log("Stream completed:", result);
+    } catch (error) {
+      setErrorStatus(error);
+      console.error("Error during stream:", error);
+    } finally {
+      changeLoadingApiResponse(false);
+      setFiles([]);
+      setUserMessage("");
+      setAbortController(null);
+      e.target.reset();
+    }
+  };
+
   // Submit handle function --> post method backend
-  const handleSubmit = async (e, customToast, baseUrl, urlEndpoint) => {
+  const handleSubmit = async (e, customToast, baseUrl) => {
     changeLoadingApiResponse(true);
     setErrorStatus(null);
     console.log(e);
@@ -200,6 +276,13 @@ export function ChatForm() {
           {errorStatusCode ? `Error Status Code : ${errorStatusCode}` : ""}
         </p>
       </div>
+      {streamMode === "stream" && iaResponse && (
+        <div className="container flex bg-slate-500 justify-center items-center mb-2 mt-1 max-w-md rounded-md px-4 py-4 w-auto mx-auto">
+          <p className="inline-block max-w-max rounded-md px-2 py-2 mt-1 hover:font-bold bg-[#08fa30]">
+            {iaResponse}
+          </p>
+        </div>
+      )}
       {loadingApiResponse && (
         <div className="container flex justify-center items-center mb-2 mt-1 max-w-md rounded-md px-4 py-4 w-auto mx-auto">
           <ScaleLoader
@@ -215,9 +298,13 @@ export function ChatForm() {
       )}
       <form
         className="form"
-        onSubmit={(e) =>
-          handleSubmit(e, FilesCustomToast, baseUrl, urlEndpoint)
-        }
+        onSubmit={(e) => {
+          if (streamMode === "stream") {
+            handleStreamSubmit(e, FilesCustomToast, baseUrl);
+          } else {
+            handleSubmit(e, FilesCustomToast, baseUrl);
+          }
+        }}
       >
         <ImageFileLabel htmlFor="inputFile" labelClassName="inputFileLabel" />
         <input
@@ -230,6 +317,26 @@ export function ChatForm() {
             setFiles(Array.from(event.target.files));
           }}
         />
+        <label htmlFor="streamModeSelector" className="block mb-2">
+          Respuesta del Modelo:
+        </label>
+        <select
+          id="streamModeSelector"
+          className="mb-4 p-2 border border-gray-400 rounded"
+          value={streamMode}
+          onChange={(e) => {
+            console.log(e.target.value);
+            setStreamMode(e.target.value);
+            if (e.target.value == "stream") {
+              setUrlEndpoint(import.meta.env.VITE_BACK_END_ENDPOINT_STREAM);
+            } else {
+              setUrlEndpoint(import.meta.env.VITE_BACK_END_ENDPOINT_1);
+            }
+          }}
+        >
+          <option value="stream">Stream</option>
+          <option value="non-stream">Non-Stream</option>
+        </select>
         <input
           type="text"
           autoComplete="off"
