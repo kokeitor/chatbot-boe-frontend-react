@@ -57,8 +57,6 @@ export function ChatForm() {
   // Necessary request params
   const baseUrl = import.meta.env.VITE_BACK_END_BASE_URL;
   const urlEndpoint = import.meta.env.VITE_BACK_END_ENDPOINT_1;
-  console.log(`BACK_END_BASE_URL : ${baseUrl}`);
-  console.log(`BACK_END_ENDPOINT_1 : ${urlEndpoint}`);
 
   // Submit handle function --> post method backend
   const handleSubmit = async (e, customToast) => {

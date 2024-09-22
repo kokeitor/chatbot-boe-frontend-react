@@ -47,6 +47,8 @@ export const handleFormSubmit = async (e, customToast, urlEndpoint) => {
   console.log(e);
   e.preventDefault();
 
+  console.log(`BACK_END_ENDPOINT_1 : ${urlEndpoint}`);
+
   // Back-End expected model body params : uploadFiles and userMessage
   const formData = new FormData();
   formData.append("userMessage", userMessage);

@@ -71,14 +71,20 @@ export function ChatContextProvider(props) {
   const setErrorStatus = (status) => {
     setErrorStatusCode(status);
   };
+  const changeUserMessage = (message) => {
+    setUserMessage(message);
+  };
+  const changeFiles = (files) => {
+    setFiles(files);
+  };
 
   return (
-    <MemoryContext.Provider
+    <ChatContext.Provider
       value={{
         files: files,
-        setFiles: setFiles,
+        setFiles: changeFiles,
         userMessage: userMessage,
-        setUserMessage: setUserMessage,
+        setUserMessage: changeUserMessage,
         abortController: abortController,
         setAbortController: setAbortController,
         chatMemory: chatMemory,
@@ -91,6 +97,6 @@ export function ChatContextProvider(props) {
       }}
     >
       {props.children}
-    </MemoryContext.Provider>
+    </ChatContext.Provider>
   );
 }
