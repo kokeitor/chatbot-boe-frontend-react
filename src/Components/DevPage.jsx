@@ -109,45 +109,6 @@ function DevPage() {
           icon={false}
         />
       </div>
-      <div className="flex justify-center items-center">
-        <button
-          onClick={() => handleDownloadTfmPdf(setTfmLoading, urlEndpointTfm)}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-mono font-bold py-2 px-4 rounded"
-          disabled={tfmLoading}
-        >
-          {tfmLoading
-            ? "Downloading..."
-            : "Download boe-chatbot-backend-model-documentation"}
-        </button>
-      </div>
-      <div className="flex justify-center items-center mt-4 mb-6 py-4 px-4">
-        {loadingDiagram1 && (
-          <p className="bg-[#acacac] rounded-lg font-bold text-sm text-white font-mono py-2 px-2">
-            Loading diagram 1...
-          </p>
-        )}
-        {loadingDiagram2 && (
-          <p className="bg-[#acacac] rounded-lg font-bold text-sm text-white font-mono py-2 px-2">
-            Loading diagram 2...
-          </p>
-        )}
-        {diagram1 && (
-          <img
-            src={diagram1}
-            alt="Diagrama_1"
-            className="max-w-full h-auto rounded-lg shadow-lg"
-          />
-        )}
-      </div>
-      <div className="flex justify-center items-center my-8 mb-4 py-4 px-4">
-        {diagram2 && (
-          <img
-            src={diagram2}
-            alt="Diagrama_1"
-            className="max-w-full h-auto rounded-lg shadow-lg"
-          />
-        )}
-      </div>
       <CopyRightFooter />
     </main>
   );
