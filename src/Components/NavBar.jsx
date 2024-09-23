@@ -10,6 +10,11 @@ export function NavBar() {
           </Link>
         </div>
         <div className="hover:scale-105 text-white font-mono text-xs bg-[#acacac] p-2 rounded-lg flex justify-center items-center">
+          <Link to="/model">
+            <h1>{"BOE model"}</h1>
+          </Link>
+        </div>
+        <div className="hover:scale-105 text-white font-mono text-xs bg-[#acacac] p-2 rounded-lg flex justify-center items-center">
           <Link to="/dev">
             <h1>{"Developer tools"}</h1>
           </Link>

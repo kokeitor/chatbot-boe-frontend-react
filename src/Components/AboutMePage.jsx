@@ -2,10 +2,11 @@ import { Card } from "./Card";
 import { FaGithub } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
 import { NavBar } from "./NavBar";
+import { CopyRightFooter } from "./CopyRightFooter";
 
 function AboutMePage() {
   return (
-    <main className="h-screen w-full bg-neutral-700">
+    <main className="h-auto w-full bg-neutral-700">
       <NavBar />
       <div className="h-min w-auto rounded-lg grid grid-cols-7 gap-4 px-4 py-4">
         <Card
@@ -23,6 +24,7 @@ function AboutMePage() {
           icon={FaLinkedin}
         />
       </div>
+      <CopyRightFooter />
     </main>
   );
 }

@@ -5,8 +5,8 @@ import { PiUserFill } from "react-icons/pi";
 
 export function ChatMemory() {
   const { chatMemory } = useContext(ChatContext);
-  const emptyMemory = "BOE CHAT";
-  const titleMemory = "BOE CHAT";
+  const emptyMemory = "BOE ChatBot";
+  const titleMemory = "BOE ChatBot";
 
   if (chatMemory.length != 0) {
     return (
@@ -67,7 +67,7 @@ export function ChatMemory() {
           </h1>
         </div>
         <h3 className="text-center mt-2 mb-2 text-lg font-mono hover:font-bold">
-          {"Chat vacio"}
+          {"ChatBot Memory Empty"}
         </h3>
       </div>
     );

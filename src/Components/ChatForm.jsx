@@ -4,7 +4,7 @@ import ScaleLoader from "react-spinners/ClipLoader";
 import { useState, useEffect, useContext } from "react";
 import { ChatContext } from "../Context/ChatContext";
 import { modelApi } from "../Apis/modelApi";
-import { handleFormSubmit } from "../Handlers/handlers";
+import { BsRobot } from "react-icons/bs";
 import { FilesCustomToast } from "./FilesCustomToast";
 import toast, { Toaster } from "react-hot-toast";
 import { MdOutlineStopCircle } from "react-icons/md";
@@ -46,6 +46,7 @@ export function ChatForm() {
 
   // vars from useContext
   const {
+    chatMemory,
     addMemory,
     errorStatusCode,
     setErrorStatus,
@@ -85,6 +86,7 @@ export function ChatForm() {
 
   // Submit Stream handle function
   const handleStreamSubmit = async (e, customToast, baseUrl) => {
+    setIaResponse("");
     changeLoadingApiResponse(true);
     setErrorStatus(null);
     console.log(e);
@@ -136,13 +138,19 @@ export function ChatForm() {
       let result = "";
       let done = false;
       while (!done) {
-        const { value, done: streamDone } = await reader.read();
+        const { value: value, done: streamDone } = await reader.read();
         done = streamDone;
         result += decoder.decode(value, { stream: true });
 
         // Update the IA response incrementally
         setIaResponse((prev) => prev + decoder.decode(value, { stream: true }));
       }
+      // add all info to chat memory
+      addMemory({
+        userMessage: userMessage,
+        iaResponse: result,
+        files: files,
+      });
       console.log("Stream completed:", result);
     } catch (error) {
       setErrorStatus(error);
@@ -271,16 +279,40 @@ export function ChatForm() {
           },
         }}
       />
-      <div className="container flex justify-center items-center mb-2 mt-1 max-w-md rounded-md px-4 py-4 w-auto mx-auto">
-        <p className="font-mono text-sm text-[#ff2828]">
-          {errorStatusCode ? `Error Status Code : ${errorStatusCode}` : ""}
-        </p>
-      </div>
-      {streamMode === "stream" && iaResponse && (
-        <div className="container flex bg-slate-500 justify-center items-center mb-2 mt-1 max-w-md rounded-md px-4 py-4 w-auto mx-auto">
-          <p className="inline-block max-w-max rounded-md px-2 py-2 mt-1 hover:font-bold bg-[#08fa30]">
-            {iaResponse}
+      {errorStatusCode && (
+        <div className="container flex justify-center items-center mb-2 mt-1 max-w-md rounded-md px-4 py-4 w-auto mx-auto">
+          <p className="font-mono text-sm text-[#ff2828]">
+            {`Error Status Code : ${errorStatusCode}`}
           </p>
+        </div>
+      )}
+
+      {streamMode === "stream" && (
+        <div className="container rounded-md px-4 py-4 mt-12 w-auto mx-auto shadow-md hover:shadow-xl shadow-[#000000] hover:shadow-[#000000] bg-[#272727]">
+          <div className="container flex-center px-4 py-2 mb-3 mt-1 rounded-md">
+            <h1 className="text-center mt-2 text-xl text-[#08fa30] font-bold font-mono">
+              {"Streaming Mode"}
+            </h1>
+          </div>
+          <div>
+            <div className="py-2 px-2">
+              <div className="flex mb-1 mt-1">
+                <BsRobot
+                  size={25}
+                  title="IA"
+                  color="#08fa30"
+                  className="ml-auto"
+                />
+              </div>
+              {iaResponse && (
+                <div className="flex rounded-md bg-[#08fa30]">
+                  <p className="max-w-max px-2 py-2 font-mono hover:font-bold">
+                    {iaResponse}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
       {loadingApiResponse && (
@@ -317,25 +349,21 @@ export function ChatForm() {
             setFiles(Array.from(event.target.files));
           }}
         />
-        <label htmlFor="streamModeSelector" className="block mb-2">
-          Respuesta del Modelo:
-        </label>
         <select
-          id="streamModeSelector"
-          className="mb-4 p-2 border border-gray-400 rounded"
+          className="mb-2 mt-2 p-1 max-w-fit font-mono font-bold text-[#000000] bg-[#e5dede] rounded-md"
           value={streamMode}
           onChange={(e) => {
             console.log(e.target.value);
             setStreamMode(e.target.value);
             if (e.target.value == "stream") {
               setUrlEndpoint(import.meta.env.VITE_BACK_END_ENDPOINT_STREAM);
-            } else {
+            } else if (e.target.value == "non-stream") {
               setUrlEndpoint(import.meta.env.VITE_BACK_END_ENDPOINT_1);
             }
           }}
         >
-          <option value="stream">Stream</option>
-          <option value="non-stream">Non-Stream</option>
+          <option value="stream">Streaming Mode</option>
+          <option value="non-stream">Non-Streaming Mode</option>
         </select>
         <input
           type="text"

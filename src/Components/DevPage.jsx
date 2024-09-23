@@ -11,6 +11,7 @@ import { useState } from "react";
 import { useFetchDiagrams } from "../Hooks/useFetchDiagrams";
 import { handleDownloadTfmPdf } from "../Handlers/handlers";
 import { NavBar } from "./NavBar";
+import { CopyRightFooter } from "./CopyRightFooter";
 
 function DevPage() {
   const [tfmLoading, setTfmLoading] = useState(false);
@@ -147,6 +148,7 @@ function DevPage() {
           />
         )}
       </div>
+      <CopyRightFooter />
     </main>
   );
 }
