@@ -1,7 +1,5 @@
 import { modelApi } from "../Apis/modelApi.js";
 import { saveAs } from "file-saver";
-import { useContext } from "react";
-import { ChatContext } from "../Context/ChatContext.jsx";
 
 // Function that handles the download a the pdf stored in the backend.
 export const handleDownloadTfmPdf = (setTfmLoading, urlEndpointTfm) => {
