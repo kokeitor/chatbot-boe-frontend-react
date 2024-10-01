@@ -8,7 +8,8 @@ import { BsRobot } from "react-icons/bs";
 import { FilesCustomToast } from "./FilesCustomToast";
 import toast, { Toaster } from "react-hot-toast";
 import { MdOutlineStopCircle } from "react-icons/md";
-import { FileForm } from "./FileForm";
+import { FilesFormManaging } from "./FileForm";
+import { FaQuestion } from "react-icons/fa";
 
 function ImageFileLabel(props) {
   return (
@@ -21,7 +22,7 @@ function ImageFileLabel(props) {
 function ImageButtonLabel(props) {
   return (
     <label htmlFor={props.htmlFor} className={props.labelClassName}>
-      <BsArrowUpCircle size={35} />
+      <FaQuestion size={35} />
     </label>
   );
 }
@@ -269,7 +270,7 @@ export function ChatForm() {
       )}
 
       {streamMode === "stream" && (
-        <div className="container rounded-md px-4 py-4 mt-12 w-auto mx-auto shadow-md hover:shadow-xl shadow-[#000000] hover:shadow-[#000000] bg-[#272727]">
+        <div className="container rounded-md px-4 py-4 mt-12 w-auto mx-auto shadow-md hover:shadow-lg shadow-[#000000] hover:shadow-[#000000] bg-[#272727]">
           <div className="container flex-center px-4 py-2 mb-3 mt-1 rounded-md">
             <h1 className="text-center mt-2 text-xl text-[#08fa30] font-bold font-mono">
               {"Streaming Mode"}
@@ -309,88 +310,102 @@ export function ChatForm() {
           />
         </div>
       )}
-      <FileForm />
-      <form
-        className="form"
-        onSubmit={(e) => {
-          if (streamMode === "stream") {
-            handleStreamSubmit(e, FilesCustomToast, baseUrl);
-          } else {
-            handleSubmit(e, FilesCustomToast, baseUrl);
-          }
-        }}
-      >
-        <select
-          className="mb-2 mt-2 p-1 max-w-fit font-mono font-bold text-[#000000] bg-[#e5dede] rounded-md"
-          value={streamMode}
-          onChange={(e) => {
-            console.log(e.target.value);
-            setStreamMode(e.target.value);
-            if (e.target.value == "stream") {
-              setUrlEndpoint(import.meta.env.VITE_BACK_END_ENDPOINT_STREAM);
-            } else if (e.target.value == "non-stream") {
-              setUrlEndpoint(import.meta.env.VITE_BACK_END_ENDPOINT_1);
-            }
-          }}
-        >
-          <option value="stream">Streaming Mode</option>
-          <option value="non-stream">Non-Streaming Mode</option>
-        </select>
-        <input
-          type="text"
-          autoComplete="off"
-          minLength={5}
-          placeholder="Pregúntame algo sobre tus archivos PDF del BOE ..."
-          id="inputText"
-          className="inputText"
-          required={true}
-          onChange={(e) => {
-            setUserMessage(e.target.value);
-          }}
-        />
-        {loadingApiResponse ? (
-          <>
-            <AbortImageButtonLabel
-              htmlFor="AbortSubmitButton"
-              labelClassName="AbortSubmitButtonLabel"
-            />
-            <button
-              type="submit"
-              id="AbortSubmitButton"
-              className="AbortSubmitButton"
-              onClick={() => {
-                if (abortController) {
-                  abortController.abort();
-                  toast("Mensaje cancelado", {
-                    position: "top-right",
-                    icon: "⛔",
-                    style: {
-                      borderRadius: "10px",
-                      background: "#333",
-                      color: "#fff",
-                    },
-                  });
-                } else {
-                  console.log("Error on the cancelation of the post request");
+      <div className="flex justify-around items-center px-2 mt-5 gap-4 rounded-lg">
+        <div className="w-1/6 px-2 rounded-lg shadow-md hover:shadow-lg shadow-[#000000] hover:shadow-[#000000] bg-[#272727]">
+          <FilesFormManaging />
+        </div>
+
+        <div className="w-5/6 mx-2">
+          <form
+            className="form"
+            onSubmit={(e) => {
+              if (streamMode === "stream") {
+                handleStreamSubmit(e, FilesCustomToast, baseUrl);
+              } else {
+                handleSubmit(e, FilesCustomToast, baseUrl);
+              }
+            }}
+          >
+            <select
+              className="mb-2 mt-2 py-1 text-center text-sm max-w-fit font-mono font-bold text-[#000000] bg-[#e5dede] rounded-md"
+              value={streamMode}
+              onChange={(e) => {
+                console.log(e.target.value);
+                setStreamMode(e.target.value);
+                if (e.target.value == "stream") {
+                  setUrlEndpoint(import.meta.env.VITE_BACK_END_ENDPOINT_STREAM);
+                } else if (e.target.value == "non-stream") {
+                  setUrlEndpoint(import.meta.env.VITE_BACK_END_ENDPOINT_1);
                 }
-                setErrorStatus(null);
-                setAbortController(null);
-                changeLoadingApiResponse(false);
-                setFiles([]);
-                setUserMessage("");
+              }}
+            >
+              <option value="stream">Streaming Mode</option>
+              <option value="non-stream">Non-Streaming Mode</option>
+            </select>
+
+            <input
+              type="text"
+              autoComplete="off"
+              minLength={5}
+              placeholder="Pregúntame algo sobre tus archivos PDF del BOE ..."
+              id="inputText"
+              className="inputText"
+              required={true}
+              onChange={(e) => {
+                setUserMessage(e.target.value);
               }}
             />
-          </>
-        ) : (
-          <>
-            <ImageButtonLabel
-              htmlFor="SubmitButton"
-              labelClassName="submitButtonLabel"
-            />
-            <button type="submit" id="SubmitButton" className="SubmitButton" />
-          </>
-        )}
-      </form>
+            {loadingApiResponse ? (
+              <>
+                <AbortImageButtonLabel
+                  htmlFor="AbortSubmitButton"
+                  labelClassName="AbortSubmitButtonLabel"
+                />
+                <button
+                  type="submit"
+                  id="AbortSubmitButton"
+                  className="AbortSubmitButton"
+                  onClick={() => {
+                    if (abortController) {
+                      abortController.abort();
+                      toast("Mensaje cancelado", {
+                        position: "top-right",
+                        icon: "⛔",
+                        style: {
+                          borderRadius: "10px",
+                          background: "#333",
+                          color: "#fff",
+                        },
+                      });
+                    } else {
+                      console.log(
+                        "Error on the cancelation of the post request"
+                      );
+                    }
+                    setErrorStatus(null);
+                    setAbortController(null);
+                    changeLoadingApiResponse(false);
+                    setFiles([]);
+                    setUserMessage("");
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                <ImageButtonLabel
+                  htmlFor="SubmitButton"
+                  labelClassName="submitButtonLabel"
+                />
+                <button
+                  type="submit"
+                  id="SubmitButton"
+                  className="SubmitButton"
+                />
+              </>
+            )}
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

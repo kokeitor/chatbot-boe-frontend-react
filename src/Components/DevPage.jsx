@@ -7,15 +7,11 @@ import { FaNodeJs } from "react-icons/fa";
 import { SiLangchain } from "react-icons/si";
 import { SiHuggingface } from "react-icons/si";
 import pineconeLogoSrc from "../assets/pinecone_logo.jpg";
-import { useState } from "react";
 import { useFetchDiagrams } from "../Hooks/useFetchDiagrams";
-import { handleDownloadTfmPdf } from "../Handlers/handlers";
 import { NavBar } from "./NavBar";
 import { CopyRightFooter } from "./CopyRightFooter";
 
 function DevPage() {
-  const [tfmLoading, setTfmLoading] = useState(false);
-
   // TFM endpoint
   const urlEndpointTfm = import.meta.env.VITE_BACK_END_ENDPOINT_TFM;
   console.log(`VITE_BACK_END_ENDPOINT_TFM : ${urlEndpointTfm}`);
