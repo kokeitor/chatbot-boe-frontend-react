@@ -40,8 +40,6 @@ export function FileForm() {
 
   // vars from useContext
   const {
-    chatMemory,
-    addMemory,
     errorStatusCode,
     setErrorStatus,
     loadingApiResponse,
@@ -166,116 +164,134 @@ export function FileForm() {
   };
 
   return (
-    <div>
-      <Toaster
-        reverseOrder={false}
-        gutter={8}
-        toastOptions={{
-          success: {
-            position: "top-right",
-            duration: 3000,
-            style: {
-              background: "green",
-              color: "white",
+    <>
+      <div>
+        <Toaster
+          reverseOrder={false}
+          gutter={8}
+          toastOptions={{
+            success: {
+              position: "top-right",
+              duration: 3000,
+              style: {
+                background: "green",
+                color: "white",
+              },
             },
-          },
-          custom: {
-            duration: 80000,
-            position: "top-left",
-          },
-        }}
-      />
-      {errorStatusCode && (
-        <div className="container flex justify-center items-center mb-2 mt-1 max-w-md rounded-md px-4 py-4 w-auto mx-auto">
-          <p className="font-mono text-sm text-[#ff2828]">
-            {`Error Status Code : ${errorStatusCode}`}
-          </p>
-        </div>
-      )}
-      {loadingApiResponse && (
-        <div className="container flex justify-center items-center mb-2 mt-1 max-w-md rounded-md px-4 py-4 w-auto mx-auto">
-          <ScaleLoader
-            height={20}
-            width={10}
-            radius={10}
-            margin={5}
-            color={"#08fa30"}
-            loading={true}
-            speedMultiplier={1}
-          />
-        </div>
-      )}
-      <form
-        className="form"
-        onSubmit={(e) => {
-          handleFileFormSubmit(e, FilesCustomToast, baseUrl, postFileEndpoint);
-        }}
-      >
-        <ImageFileLabel htmlFor="inputFile" labelClassName="inputFileLabel" />
-        <input
-          type="file"
-          id="inputFile"
-          accept="application/pdf"
-          multiple={multipleFilesFlag}
-          className="inputFile"
-          onChange={(event) => {
-            setFiles(Array.from(event.target.files));
+            custom: {
+              duration: 80000,
+              position: "top-left",
+            },
           }}
         />
-        <button
-          type="submit"
-          onClick={() =>
+        {errorStatusCode && (
+          <div className="container flex justify-center items-center mb-2 mt-1 max-w-md rounded-md px-4 py-4 w-auto mx-auto">
+            <p className="font-mono text-sm text-[#ff2828]">
+              {`Error Status Code : ${errorStatusCode}`}
+            </p>
+          </div>
+        )}
+        {loadingApiResponse && (
+          <div className="container flex justify-center items-center mb-2 mt-1 max-w-md rounded-md px-4 py-4 w-auto mx-auto">
+            <ScaleLoader
+              height={20}
+              width={10}
+              radius={10}
+              margin={5}
+              color={"#08fa30"}
+              loading={true}
+              speedMultiplier={1}
+            />
+          </div>
+        )}
+        <form
+          className="form"
+          onSubmit={(e) => {
+            handleFileFormSubmit(
+              e,
+              FilesCustomToast,
+              baseUrl,
+              postFileEndpoint
+            );
+          }}
+        >
+          <ImageFileLabel htmlFor="inputFile" labelClassName="inputFileLabel" />
+          <input
+            type="file"
+            id="inputFile"
+            accept="application/pdf"
+            multiple={multipleFilesFlag}
+            className="inputFile"
+            onChange={(event) => {
+              setFiles(Array.from(event.target.files));
+            }}
+          />
+          {loadingApiResponse ? (
+            <>
+              <AbortImageButtonLabel
+                htmlFor="AbortSubmitButton"
+                labelClassName="AbortSubmitButtonLabel"
+              />
+              <button
+                type="submit"
+                id="AbortSubmitButton"
+                className="AbortSubmitButton"
+                onClick={() => {
+                  if (abortController) {
+                    abortController.abort();
+                    toast("Mensaje cancelado", {
+                      position: "top-right",
+                      icon: "⛔",
+                      style: {
+                        borderRadius: "10px",
+                        background: "#333",
+                        color: "#fff",
+                      },
+                    });
+                  } else {
+                    console.log("Error on the cancelation of the post request");
+                  }
+                  setErrorStatus(null);
+                  setAbortController(null);
+                  changeLoadingApiResponse(false);
+                  setFiles([]);
+                  setUserMessage("");
+                }}
+              />
+            </>
+          ) : (
+            <>
+              <ImageButtonLabel
+                htmlFor="SubmitButton"
+                labelClassName="submitButtonLabel"
+              />
+              <button
+                type="submit"
+                id="SubmitButton"
+                className="SubmitButton"
+              />
+            </>
+          )}
+        </form>
+      </div>
+      <div className="container flex justify-center items-center mb-2 mt-1 max-w-md rounded-md px-4 py-4 w-auto mx-auto">
+        <form
+          className="form"
+          onSubmit={(e) => {
             handleFileFormSubmit(
               e,
               FilesCustomToast,
               baseUrl,
               deleteFileEndpoint
-            )
-          }
-        />
-        {loadingApiResponse ? (
-          <>
-            <AbortImageButtonLabel
-              htmlFor="AbortSubmitButton"
-              labelClassName="AbortSubmitButtonLabel"
-            />
-            <button
-              type="submit"
-              id="AbortSubmitButton"
-              className="AbortSubmitButton"
-              onClick={() => {
-                if (abortController) {
-                  abortController.abort();
-                  toast("Mensaje cancelado", {
-                    position: "top-right",
-                    icon: "⛔",
-                    style: {
-                      borderRadius: "10px",
-                      background: "#333",
-                      color: "#fff",
-                    },
-                  });
-                } else {
-                  console.log("Error on the cancelation of the post request");
-                }
-                setErrorStatus(null);
-                setAbortController(null);
-                changeLoadingApiResponse(false);
-                setFiles([]);
-                setUserMessage("");
-              }}
-            />
-          </>
-        ) : (
-          <>
-            <ImageButtonLabel
-              htmlFor="SubmitButton"
-              labelClassName="submitButtonLabel"
-            />
-            <button type="submit" id="SubmitButton" className="SubmitButton" />
-          </>
-        )}
-      </form>
-    </div>
+            );
+          }}
+        >
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-700 text-white mt-2 font-mono text-sm py-2 px-4 rounded"
+          />
+        </form>
+      </div>
+    </>
   );
 }
