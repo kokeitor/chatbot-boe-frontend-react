@@ -13,7 +13,7 @@ export function ChatContextProvider(props) {
       console.log(
         `Memory ${index + 1} --> IA: ${m.iaResponse} -- User Message: ${
           m.userMessage
-        } -- Files: ${m.files}`
+        }`
       )
     );
   }, [chatMemory]);

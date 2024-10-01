@@ -8,7 +8,6 @@ import { BsRobot } from "react-icons/bs";
 import { FilesCustomToast } from "./FilesCustomToast";
 import toast, { Toaster } from "react-hot-toast";
 import { MdOutlineStopCircle } from "react-icons/md";
-import { FileForm } from "./FileForm";
 
 function ImageFileLabel(props) {
   return (
@@ -34,15 +33,10 @@ function AbortImageButtonLabel(props) {
   );
 }
 
-export function ChatForm() {
+export function FileForm() {
   // vars from usestsate
-  const [userMessage, setUserMessage] = useState("");
-  const [iaResponse, setIaResponse] = useState("");
+  const [files, setFiles] = useState([]);
   const [abortController, setAbortController] = useState(null);
-  const [streamMode, setStreamMode] = useState("stream");
-  const [urlEndpoint, setUrlEndpoint] = useState(
-    import.meta.env.VITE_BACK_END_ENDPOINT_STREAM
-  );
 
   // vars from useContext
   const {
@@ -54,8 +48,15 @@ export function ChatForm() {
     changeLoadingApiResponse,
   } = useContext(ChatContext);
 
+  // local constant vars
+  const multipleFilesFlag = true;
+
   // Necessary request params
   const baseUrl = import.meta.env.VITE_BACK_END_BASE_URL;
+  const postFileEndpoint = import.meta.env
+    .VITE_BACK_END_ENDPOINT_BOE_POST_FILES;
+  const deleteFileEndpoint = import.meta.env
+    .VITE_BACK_END_ENDPOINT_BOE_DELETE_FILES;
 
   // useEffect to show toaster component error
   useEffect(() => {
@@ -72,86 +73,14 @@ export function ChatForm() {
 
   // useEffect to log changes on var from usestate values
   useEffect(() => {
-    console.log(`User message : ${userMessage}`);
-  }, [userMessage]);
-
-  // Submit Stream handle function
-  const handleStreamSubmit = async (e, customToast, baseUrl) => {
-    setIaResponse("");
-    changeLoadingApiResponse(true);
-    setErrorStatus(null);
-    console.log(e);
-    e.preventDefault();
-
-    // logs
-    console.log(`BACK_END_ENDPOINT_SREAM ${urlEndpoint}`);
-
-    try {
-      // Back-End FastAPI expected model body params : uploadFiles and userMessage
-      const formData = new FormData();
-      formData.append("userMessage", userMessage);
-
-      // logs of the form data content object send to the api endpoint
-      console.log(formData);
-      formData.keys().forEach((key) => console.log(key));
-      formData.values().forEach((val) => console.log(val));
-
-      // handle abort controller object set to be used in the abort button
-      const controller = new AbortController();
-      setAbortController(controller);
-
-      // Axios Configuration Request
-      const fetchStreamConfig = {
-        method: "POST",
-        body: formData, // Sending form data
-        signal: controller.signal,
-      };
-
-      const response = await fetch(baseUrl + urlEndpoint, fetchStreamConfig);
-
-      if (!response.ok) {
-        setErrorStatus(response.status);
-        throw new Error(`HTTP Streaming error! status: ${response.status}`);
-      }
-
-      toast.success(`API Streaming response Status code : ${response.status}`);
-      if (files.length > 0) {
-        toast.custom((t) => customToast(t, files));
-      }
-
-      // Handle the stream using the reader
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder("utf-8");
-
-      let result = "";
-      let done = false;
-      while (!done) {
-        const { value: value, done: streamDone } = await reader.read();
-        done = streamDone;
-        result += decoder.decode(value, { stream: true });
-
-        // Update the IA response incrementally
-        setIaResponse((prev) => prev + decoder.decode(value, { stream: true }));
-      }
-      // add all info to chat memory
-      addMemory({
-        userMessage: userMessage,
-        iaResponse: result,
-      });
-      console.log("Stream completed:", result);
-    } catch (error) {
-      setErrorStatus(error);
-      console.error("Error during stream:", error);
-    } finally {
-      changeLoadingApiResponse(false);
-      setUserMessage("");
-      setAbortController(null);
-      e.target.reset();
-    }
-  };
+    files.forEach((f, index) => {
+      console.log(`Input file ${index} name : ${f.name}`);
+      console.log(`Input file ${index} objet : ${f}`);
+    });
+  }, [files]);
 
   // Submit handle function --> post method backend
-  const handleSubmit = async (e, customToast, baseUrl) => {
+  const handleFileFormSubmit = async (e, customToast, baseUrl, urlEndpoint) => {
     changeLoadingApiResponse(true);
     setErrorStatus(null);
     console.log(e);
@@ -162,7 +91,9 @@ export function ChatForm() {
 
     // Back-End expected model body params : uploadFiles and userMessage
     const formData = new FormData();
-    formData.append("userMessage", userMessage);
+    files.forEach((file) => {
+      formData.append("uploadFiles", file);
+    });
 
     // logs of the form data content object send to the api endpoint
     console.log(formData);
@@ -195,10 +126,7 @@ export function ChatForm() {
         if (files.length > 0) {
           toast.custom((t) => customToast(t, files));
         }
-        addMemory({
-          userMessage: response.data.userMessage,
-          iaResponse: response.data.iaResponse,
-        });
+        setFiles(files);
       })
       .catch((error) => {
         if (error.response) {
@@ -226,10 +154,7 @@ export function ChatForm() {
           setErrorStatus(error.message);
         }
         console.log(error.config);
-        addMemory({
-          userMessage: userMessage,
-          iaResponse: "IA Model API Error Response : " + error.message,
-        });
+        setFiles([]);
       })
       .finally(() => {
         changeLoadingApiResponse(false);
@@ -267,35 +192,6 @@ export function ChatForm() {
           </p>
         </div>
       )}
-
-      {streamMode === "stream" && (
-        <div className="container rounded-md px-4 py-4 mt-12 w-auto mx-auto shadow-md hover:shadow-xl shadow-[#000000] hover:shadow-[#000000] bg-[#272727]">
-          <div className="container flex-center px-4 py-2 mb-3 mt-1 rounded-md">
-            <h1 className="text-center mt-2 text-xl text-[#08fa30] font-bold font-mono">
-              {"Streaming Mode"}
-            </h1>
-          </div>
-          <div>
-            <div className="py-2 px-2">
-              <div className="flex mb-1 mt-1">
-                <BsRobot
-                  size={25}
-                  title="IA"
-                  color="#08fa30"
-                  className="ml-auto"
-                />
-              </div>
-              {iaResponse && (
-                <div className="flex rounded-md bg-[#08fa30]">
-                  <p className="max-w-max px-2 py-2 font-mono hover:font-bold">
-                    {iaResponse}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
       {loadingApiResponse && (
         <div className="container flex justify-center items-center mb-2 mt-1 max-w-md rounded-md px-4 py-4 w-auto mx-auto">
           <ScaleLoader
@@ -309,44 +205,33 @@ export function ChatForm() {
           />
         </div>
       )}
-      <FileForm />
       <form
         className="form"
         onSubmit={(e) => {
-          if (streamMode === "stream") {
-            handleStreamSubmit(e, FilesCustomToast, baseUrl);
-          } else {
-            handleSubmit(e, FilesCustomToast, baseUrl);
-          }
+          handleFileFormSubmit(e, FilesCustomToast, baseUrl, postFileEndpoint);
         }}
       >
-        <select
-          className="mb-2 mt-2 p-1 max-w-fit font-mono font-bold text-[#000000] bg-[#e5dede] rounded-md"
-          value={streamMode}
-          onChange={(e) => {
-            console.log(e.target.value);
-            setStreamMode(e.target.value);
-            if (e.target.value == "stream") {
-              setUrlEndpoint(import.meta.env.VITE_BACK_END_ENDPOINT_STREAM);
-            } else if (e.target.value == "non-stream") {
-              setUrlEndpoint(import.meta.env.VITE_BACK_END_ENDPOINT_1);
-            }
-          }}
-        >
-          <option value="stream">Streaming Mode</option>
-          <option value="non-stream">Non-Streaming Mode</option>
-        </select>
+        <ImageFileLabel htmlFor="inputFile" labelClassName="inputFileLabel" />
         <input
-          type="text"
-          autoComplete="off"
-          minLength={5}
-          placeholder="Pregúntame algo sobre tus archivos PDF del BOE ..."
-          id="inputText"
-          className="inputText"
-          required={true}
-          onChange={(e) => {
-            setUserMessage(e.target.value);
+          type="file"
+          id="inputFile"
+          accept="application/pdf"
+          multiple={multipleFilesFlag}
+          className="inputFile"
+          onChange={(event) => {
+            setFiles(Array.from(event.target.files));
           }}
+        />
+        <button
+          type="submit"
+          onClick={() =>
+            handleFileFormSubmit(
+              e,
+              FilesCustomToast,
+              baseUrl,
+              deleteFileEndpoint
+            )
+          }
         />
         {loadingApiResponse ? (
           <>
