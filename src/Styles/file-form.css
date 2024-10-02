@@ -1,0 +1,77 @@
+.form {
+  width: 100%;
+  height: 100%; /* Full height */
+  max-width: none; /* Remove max width restriction */
+  padding: 20px;
+  background-color: #4b5563;
+  border-radius: 10px;
+  box-shadow: 2px 2px 8px #000000; /* Subtle shadow */
+  display: flex;
+  flex-direction: row; /* Make labels and input be in a row */
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.form:hover {
+  box-shadow: 2px 2px 20px #000000;
+  background-color: #acacac;
+}
+
+.inputFiles {
+  display: none;
+}
+
+.SubmitButtonFiles {
+  display: none;
+}
+
+.AbortSubmitButtonFiles {
+  display: none;
+}
+
+.inputFilesLabel {
+  transition: transform 0.2s ease, opacity 0.2s ease; /* Ensure smooth transitions */
+  padding: 10px;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.inputFilesLabel:hover {
+  opacity: 0.7; /* Slightly reduce opacity for a subtle fade effect */
+  transform: scale(1.1); /* Scale the logo slightly to create a zoom effect */
+  color: #08fa30;
+}
+
+.submitButtonFilesLabel {
+  transition: transform 0.2s ease, opacity 0.2s ease; /* Ensure smooth transitions */
+  padding: 10px;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.submitButtonFilesLabel:hover {
+  opacity: 0.7; /* Slightly reduce opacity for a subtle fade effect */
+  transform: scale(1.1); /* Scale the logo slightly to create a zoom effect */
+  color: #08fa30;
+}
+
+.AbortSubmitButtonFilesLabel {
+  transition: transform 0.2s ease, opacity 0.2s ease; /* Ensure smooth transitions */
+  padding: 10px;
+  border-radius: 5px;
+  color: #f21313;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.AbortSubmitButtonFilesLabel:hover {
+  opacity: 0.7; /* Slightly reduce opacity for a subtle fade effect */
+  transform: scale(1.1); /* Scale the logo slightly to create a zoom effect */
+  color: #f21313;
+}

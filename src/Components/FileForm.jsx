@@ -1,10 +1,7 @@
-import { BsArrowUpCircle, BsFileEarmarkArrowUp } from "react-icons/bs";
-import "../Styles/chat-form.css";
+import "../Styles/file-form.css";
 import ScaleLoader from "react-spinners/ClipLoader";
 import { useState, useEffect, useContext } from "react";
-import { ChatContext } from "../Context/ChatContext";
 import { modelApi } from "../Apis/modelApi";
-import { BsRobot } from "react-icons/bs";
 import { FilesCustomToast, FilesDeletedCustomToast } from "./FilesCustomToast";
 import toast, { Toaster } from "react-hot-toast";
 import { MdOutlineStopCircle } from "react-icons/md";
@@ -34,12 +31,14 @@ function AbortImageButtonLabel(props) {
     </label>
   );
 }
+
 export function FilesFormManaging(props) {
   // vars from usestsate
   const [files, setFiles] = useState([]);
-  const [abortController, setAbortController] = useState(null);
-  const [loadingApiResponse, changeLoadingApiResponse] = useState(false);
-  const [errorStatusCode, setErrorStatus] = useState(null);
+  // const [filesAbortController, setFilesAbortController] = useState(null);
+  const [filesLoadingApiResponse, changeFilesLoadingApiResponse] =
+    useState(false);
+  const [filesErrorStatusCode, setFilesErrorStatus] = useState(null);
 
   // local constant vars
   const multipleFilesFlag = true;
@@ -54,8 +53,8 @@ export function FilesFormManaging(props) {
 
   // useEffect to show toaster component error
   useEffect(() => {
-    if (errorStatusCode) {
-      toast.error(`Error Status Code : ${errorStatusCode}`, {
+    if (filesErrorStatusCode) {
+      toast.error(`Error Status Code : ${filesErrorStatusCode}`, {
         duration: 5000,
         style: {
           background: "#363636",
@@ -63,7 +62,7 @@ export function FilesFormManaging(props) {
         },
       });
     }
-  }, [errorStatusCode]);
+  }, [filesErrorStatusCode]);
 
   // useEffect to log changes on var from usestate values
   useEffect(() => {
@@ -80,38 +79,43 @@ export function FilesFormManaging(props) {
     urlEndpoint,
     method = "post"
   ) => {
-    changeLoadingApiResponse(true);
-    setErrorStatus(null);
+    changeFilesLoadingApiResponse(true);
+    setFilesErrorStatus(null);
     console.log(e);
     e.preventDefault();
 
     console.log(`BACK_END_ENDPOINT_1 : ${urlEndpoint}`);
 
-    // Back-End expected model body params : uploadFiles and userMessage
-    const formData = new FormData();
-    files.forEach((file) => {
-      formData.append("uploadFiles", file);
-    });
-
-    // logs of the form data content object send to the api endpoint
-    console.log(formData);
-    formData.keys().forEach((key) => console.log(key));
-    formData.values().forEach((val) => console.log(val));
-
-    // handle abort controller object set to be used in the abort button
-    const controller = new AbortController();
-    setAbortController(controller);
-
-    // Axios Configuration Request
-    const axiosConfigRequest = {
+    // Inicializamos la configuración básica de Axios
+    let axiosConfigRequest = {
       method: method,
       url: urlEndpoint,
       headers: {
         "Content-Type": "multipart/form-data",
       },
-      signal: controller.signal,
-      data: method === "post" ? formData : null,
     };
+
+    // Si el método es "post", añadimos el signal y los datos
+    if (method === "post") {
+      //const filesController = new AbortController();
+      // setFilesAbortController(filesController);
+
+      // Añadimos el signal para permitir abortar la petición
+      //axiosConfigRequest.signal = filesController.signal;
+
+      // Añadimos los datos del formData
+      // Back-End expected model body params : uploadFiles and userMessage
+      const formData = new FormData();
+      files.forEach((file) => {
+        formData.append("uploadFiles", file);
+      });
+
+      // logs of the form data content object send to the api endpoint
+      console.log(formData);
+      formData.keys().forEach((key) => console.log(key));
+      formData.values().forEach((val) => console.log(val));
+      axiosConfigRequest.data = formData;
+    }
 
     // Post request to API endpoint
     modelApi(axiosConfigRequest)
@@ -134,21 +138,21 @@ export function FilesFormManaging(props) {
           // que esta fuera del rango de 2xx
           console.log("error.response : ");
           console.log(error);
-          setErrorStatus(error.response.status);
+          setFilesErrorStatus(error.response.status);
         } else if (error.request) {
           // La petición fue hecha pero no se recibió respuesta
           // `error.request` es una instancia de XMLHttpRequest en el navegador y una instancia de
           // http.ClientRequest en node.js
           console.log("error.request : ");
           console.log(error.request.statusText);
-          setErrorStatus(error.request.status);
+          setfilesErrorStatus(error.request.status);
         } else {
           // Algo paso al preparar la petición que lanzo un Error
           console.log(
             "Algo paso al preparar la petición que lanzo un Error : ",
             error.message
           );
-          setErrorStatus(error.message);
+          setFilesErrorStatus(error.message);
         }
         console.log(error.config);
         if (method === "post") {
@@ -156,9 +160,11 @@ export function FilesFormManaging(props) {
         }
       })
       .finally(() => {
-        changeLoadingApiResponse(false);
-        setFiles([]);
-        setAbortController(null);
+        changeFilesLoadingApiResponse(false);
+        if (method === "post") {
+          setFiles([]);
+          // setFilesAbortController(null);
+        }
         e.target.reset();
       });
   };
@@ -183,14 +189,14 @@ export function FilesFormManaging(props) {
           },
         }}
       />
-      {errorStatusCode && (
+      {filesErrorStatusCode && (
         <div className="container flex justify-center items-center mb-2 mt-1 max-w-md rounded-md px-4 py-4 w-auto mx-auto">
           <p className="font-mono text-sm text-[#ff2828]">
-            {`Error Status Code : ${errorStatusCode}`}
+            {`Error Status Code : ${filesErrorStatusCode}`}
           </p>
         </div>
       )}
-      {loadingApiResponse && (
+      {filesLoadingApiResponse && (
         <div className="container flex justify-center items-center mb-2 mt-1 max-w-md rounded-md px-4 py-4 w-auto mx-auto">
           <ScaleLoader
             height={20}
@@ -215,7 +221,7 @@ export function FilesFormManaging(props) {
                 e,
                 FilesDeletedCustomToast,
                 deleteFileEndpoint,
-                "delete"
+                "get"
               );
             }}
           >
@@ -240,66 +246,28 @@ export function FilesFormManaging(props) {
             }}
           >
             <ImageFileLabel
-              htmlFor="inputFile"
-              labelClassName="inputFileLabel"
+              htmlFor="inputFiles"
+              labelClassName="inputFilesLabel"
             />
             <input
               type="file"
-              id="inputFile"
+              id="inputFiles"
               accept="application/pdf"
               multiple={multipleFilesFlag}
-              className="inputFile"
+              className="inputFiles"
               onChange={(event) => {
                 setFiles(Array.from(event.target.files));
               }}
             />
-            {loadingApiResponse ? (
-              <>
-                <AbortImageButtonLabel
-                  htmlFor="AbortSubmitButton"
-                  labelClassName="AbortSubmitButtonLabel"
-                />
-                <button
-                  type="submit"
-                  id="AbortSubmitButton"
-                  className="AbortSubmitButton"
-                  onClick={() => {
-                    if (abortController) {
-                      abortController.abort();
-                      toast("Mensaje cancelado", {
-                        position: "top-right",
-                        icon: "⛔",
-                        style: {
-                          borderRadius: "10px",
-                          background: "#333",
-                          color: "#fff",
-                        },
-                      });
-                    } else {
-                      console.log(
-                        "Error on the cancelation of the post request"
-                      );
-                    }
-                    setErrorStatus(null);
-                    setAbortController(null);
-                    changeLoadingApiResponse(false);
-                    setFiles([]);
-                  }}
-                />
-              </>
-            ) : (
-              <>
-                <ImageButtonLabel
-                  htmlFor="SubmitButton"
-                  labelClassName="submitButtonLabel"
-                />
-                <button
-                  type="submit"
-                  id="SubmitButton"
-                  className="SubmitButton"
-                />
-              </>
-            )}
+            <ImageButtonLabel
+              htmlFor="SubmitButtonFilesID"
+              labelClassName="submitButtonFilesLabel"
+            />
+            <button
+              type="submit"
+              id="SubmitButtonFilesID"
+              className="SubmitButtonFiles"
+            />
           </form>
         </div>
       </div>

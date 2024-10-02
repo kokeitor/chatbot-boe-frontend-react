@@ -1,23 +1,14 @@
-import { BsArrowUpCircle, BsFileEarmarkArrowUp } from "react-icons/bs";
+import { BsFileEarmarkArrowUp } from "react-icons/bs";
 import "../Styles/chat-form.css";
 import ScaleLoader from "react-spinners/ClipLoader";
 import { useState, useEffect, useContext } from "react";
 import { ChatContext } from "../Context/ChatContext";
 import { modelApi } from "../Apis/modelApi";
 import { BsRobot } from "react-icons/bs";
-import { FilesCustomToast } from "./FilesCustomToast";
 import toast, { Toaster } from "react-hot-toast";
 import { MdOutlineStopCircle } from "react-icons/md";
 import { FilesFormManaging } from "./FileForm";
 import { FaQuestion } from "react-icons/fa";
-
-function ImageFileLabel(props) {
-  return (
-    <label htmlFor={props.htmlFor} className={props.labelClassName}>
-      <BsFileEarmarkArrowUp size={35} />
-    </label>
-  );
-}
 
 function ImageButtonLabel(props) {
   return (
@@ -77,7 +68,7 @@ export function ChatForm() {
   }, [userMessage]);
 
   // Submit Stream handle function
-  const handleStreamSubmit = async (e, customToast, baseUrl) => {
+  const handleStreamSubmit = async (e, baseUrl) => {
     setIaResponse("");
     changeLoadingApiResponse(true);
     setErrorStatus(null);
@@ -116,9 +107,6 @@ export function ChatForm() {
       }
 
       toast.success(`API Streaming response Status code : ${response.status}`);
-      if (files.length > 0) {
-        toast.custom((t) => customToast(t, files));
-      }
 
       // Handle the stream using the reader
       const reader = response.body.getReader();
@@ -152,7 +140,7 @@ export function ChatForm() {
   };
 
   // Submit handle function --> post method backend
-  const handleSubmit = async (e, customToast, baseUrl) => {
+  const handleSubmit = async (e, baseUrl) => {
     changeLoadingApiResponse(true);
     setErrorStatus(null);
     console.log(e);
@@ -193,9 +181,6 @@ export function ChatForm() {
         console.log(response.headers);
         console.log(response.config);
         toast.success(`API response Status code : ${response.status}`);
-        if (files.length > 0) {
-          toast.custom((t) => customToast(t, files));
-        }
         addMemory({
           userMessage: response.data.userMessage,
           iaResponse: response.data.iaResponse,
@@ -320,9 +305,9 @@ export function ChatForm() {
             className="form"
             onSubmit={(e) => {
               if (streamMode === "stream") {
-                handleStreamSubmit(e, FilesCustomToast, baseUrl);
+                handleStreamSubmit(e, baseUrl);
               } else {
-                handleSubmit(e, FilesCustomToast, baseUrl);
+                handleSubmit(e, baseUrl);
               }
             }}
           >
