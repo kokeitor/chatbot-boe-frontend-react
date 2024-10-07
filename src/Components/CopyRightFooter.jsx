@@ -10,7 +10,7 @@ export function CopyRightFooter() {
           &copy; {currentYear} Boe ChatBot. All rights reserved.
         </p>
         <p className="text-xs">
-          Made with ❤️ |{" "}
+          Made with ❤️ and 💪 |{" "}
           <a href="/privacy" className="text-blue-400">
             Privacy Policy
           </a>{" "}
