@@ -19,6 +19,28 @@ jobs:
         with:
           submodules: true
           lfs: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.17.0'  # Configurar Node.js v20.17.0
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Set up environment variables
+        run: |
+          echo "VITE_BACK_END_BASE_URL=${{ secrets.VITE_BACK_END_BASE_URL }}" >> .env
+          echo "VITE_BACK_END_ENDPOINT_1=${{ secrets.VITE_BACK_END_ENDPOINT_1 }}" >> .env
+          echo "VITE_BACK_END_ENDPOINT_2=${{ secrets.VITE_BACK_END_ENDPOINT_2 }}" >> .env
+          echo "VITE_BACK_END_ENDPOINT_D_1=${{ secrets.VITE_BACK_END_ENDPOINT_D_1 }}" >> .env
+          echo "VITE_BACK_END_ENDPOINT_D_2=${{ secrets.VITE_BACK_END_ENDPOINT_D_2 }}" >> .env
+          echo "VITE_BACK_END_ENDPOINT_GRAPH=${{ secrets.VITE_BACK_END_ENDPOINT_GRAPH }}" >> .env
+          echo "VITE_BACK_END_ENDPOINT_TFM=${{ secrets.VITE_BACK_END_ENDPOINT_TFM }}" >> .env
+          echo "VITE_BACK_END_ENDPOINT_STREAM=${{ secrets.VITE_BACK_END_ENDPOINT_STREAM }}" >> .env
+          echo "VITE_BACK_END_ENDPOINT_BOE_POST_FILES=${{ secrets.VITE_BACK_END_ENDPOINT_BOE_POST_FILES }}" >> .env
+          echo "VITE_BACK_END_ENDPOINT_BOE_DELETE_FILES=${{ secrets.VITE_BACK_END_ENDPOINT_BOE_DELETE_FILES }}" >> .env
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
