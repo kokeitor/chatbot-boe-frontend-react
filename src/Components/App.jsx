@@ -18,7 +18,7 @@ function App() {
               (e.currentTarget.style.filter = "drop-shadow(0 0 2em #1875f0)")
             }
             onMouseOut={(e) => (e.currentTarget.style.filter = "none")}
-            alt="BOE logo"
+            alt="BOE logo_1"
           />
         </a>
       </div>
