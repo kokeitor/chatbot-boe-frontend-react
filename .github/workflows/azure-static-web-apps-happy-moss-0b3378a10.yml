@@ -5,6 +5,18 @@ on:
     branches:
       - pro
 
+env:
+  VITE_BACK_END_BASE_URL: https://boe-chatbot-backend-ergea2engvhzhjed.spaincentral-01.azurewebsites.net
+  VITE_BACK_END_ENDPOINT_1: /iaresponse
+  VITE_BACK_END_ENDPOINT_2: /restartmemory
+  VITE_BACK_END_ENDPOINT_D_1: /diagram_1
+  VITE_BACK_END_ENDPOINT_D_2: /diagram_2
+  VITE_BACK_END_ENDPOINT_GRAPH: /graph
+  VITE_BACK_END_ENDPOINT_TFM: /tfm
+  VITE_BACK_END_ENDPOINT_STREAM: /iaresponsestream
+  VITE_BACK_END_ENDPOINT_BOE_POST_FILES: /uploadfiles
+  VITE_BACK_END_ENDPOINT_BOE_DELETE_FILES: /deletefiles
+
 jobs:
   build_and_deploy_job:
     runs-on: ubuntu-latest
@@ -25,16 +37,16 @@ jobs:
 
       - name: Set up environment variables
         run: |
-          echo "VITE_BACK_END_BASE_URL=${{ secrets.VITE_BACK_END_BASE_URL }}" >> .env
-          echo "VITE_BACK_END_ENDPOINT_1=${{ secrets.VITE_BACK_END_ENDPOINT_1 }}" >> .env
-          echo "VITE_BACK_END_ENDPOINT_2=${{ secrets.VITE_BACK_END_ENDPOINT_2 }}" >> .env
-          echo "VITE_BACK_END_ENDPOINT_D_1=${{ secrets.VITE_BACK_END_ENDPOINT_D_1 }}" >> .env
-          echo "VITE_BACK_END_ENDPOINT_D_2=${{ secrets.VITE_BACK_END_ENDPOINT_D_2 }}" >> .env
-          echo "VITE_BACK_END_ENDPOINT_GRAPH=${{ secrets.VITE_BACK_END_ENDPOINT_GRAPH }}" >> .env
-          echo "VITE_BACK_END_ENDPOINT_TFM=${{ secrets.VITE_BACK_END_ENDPOINT_TFM }}" >> .env
-          echo "VITE_BACK_END_ENDPOINT_STREAM=${{ secrets.VITE_BACK_END_ENDPOINT_STREAM }}" >> .env
-          echo "VITE_BACK_END_ENDPOINT_BOE_POST_FILES=${{ secrets.VITE_BACK_END_ENDPOINT_BOE_POST_FILES }}" >> .env
-          echo "VITE_BACK_END_ENDPOINT_BOE_DELETE_FILES=${{ secrets.VITE_BACK_END_ENDPOINT_BOE_DELETE_FILES }}" >> .env
+          echo "VITE_BACK_END_BASE_URL=${{ env.VITE_BACK_END_BASE_URL }}" >> .env
+          echo "VITE_BACK_END_ENDPOINT_1=${{ env.VITE_BACK_END_ENDPOINT_1 }}" >> .env
+          echo "VITE_BACK_END_ENDPOINT_2=${{ env.VITE_BACK_END_ENDPOINT_2 }}" >> .env
+          echo "VITE_BACK_END_ENDPOINT_D_1=${{ env.VITE_BACK_END_ENDPOINT_D_1 }}" >> .env
+          echo "VITE_BACK_END_ENDPOINT_D_2=${{ env.VITE_BACK_END_ENDPOINT_D_2 }}" >> .env
+          echo "VITE_BACK_END_ENDPOINT_GRAPH=${{ env.VITE_BACK_END_ENDPOINT_GRAPH }}" >> .env
+          echo "VITE_BACK_END_ENDPOINT_TFM=${{ env.VITE_BACK_END_ENDPOINT_TFM }}" >> .env
+          echo "VITE_BACK_END_ENDPOINT_STREAM=${{ env.VITE_BACK_END_ENDPOINT_STREAM }}" >> .env
+          echo "VITE_BACK_END_ENDPOINT_BOE_POST_FILES=${{ env.VITE_BACK_END_ENDPOINT_BOE_POST_FILES }}" >> .env
+          echo "VITE_BACK_END_ENDPOINT_BOE_DELETE_FILES=${{ env.VITE_BACK_END_ENDPOINT_BOE_DELETE_FILES }}" >> .env
 
       - name: Build And Deploy
         id: builddeploy
