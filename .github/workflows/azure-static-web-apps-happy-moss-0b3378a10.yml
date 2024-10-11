@@ -4,9 +4,16 @@ on:
   push:
     branches:
       - pro
+    paths-ignore:
+      - DEPLOY.md
+      - get_tips.md
+      - README.md
+      - GIT_TIPS.md
+      - .env.local
+      - .env
 
 env:
-  VITE_BACK_END_BASE_URL: https://boe-chatbot-backend-ergea2engvhzhjed.spaincentral-01.azurewebsites.net
+  VITE_BACK_END_BASE_URL: https://backend-boechat.onrender.com
   VITE_BACK_END_ENDPOINT_1: /iaresponse
   VITE_BACK_END_ENDPOINT_2: /restartmemory
   VITE_BACK_END_ENDPOINT_D_1: /diagram_1
