@@ -1,4 +1,4 @@
-# Procesamiento del BOE mediante sistema basado en Semantic Chunking, RAPTOR Dimensional RAG y agente o grafo lógico que hace uso de LLM LLAMA3 para generación de texto
+# BOE ChatBot
 
 ## Pasos para usar BOE ChatBot y chatear con tus PDFs del BOE:
 
@@ -39,7 +39,7 @@ Crea una carpeta en tu máquina local donde clonar los repositorios del frontend
 
     Ejemplo:
    ```sh
-   VITE_BACK_END_BASE_URL=http://localhost:5173
+   VITE_BACK_END_BASE_URL=http://localhost:8000
    ```
 
 ### Back-End
