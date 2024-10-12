@@ -1,6 +1,3 @@
-Aquí tienes el archivo README corregido y con algunos emojis para hacerlo más visual y atractivo:
-
----
 
 # 🚀 BOE ChatBot
 
@@ -120,6 +117,3 @@ Crea una carpeta en tu máquina local donde clonar los repositorios del frontend
    uvicorn src.main:app --reload
    ```
 
----
-
-Con estos pequeños cambios y emojis, el archivo README debería ser más claro y atractivo para quien lo lea.
