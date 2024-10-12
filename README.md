@@ -1,3 +1,7 @@
+Aquí tienes el archivo README corregido y con algunos emojis para hacerlo más visual y atractivo:
+
+---
+
 # 🚀 BOE ChatBot
 
 ## Pasos para usar BOE ChatBot y chatear con tus PDFs del BOE 📄🤖:
@@ -79,8 +83,8 @@ Crea una carpeta en tu máquina local donde clonar los repositorios del frontend
    Para obtener las claves de estas APIs, puedes seguir los siguientes enlaces:
 
    - [OpenAI API Key](https://platform.openai.com/account/api-keys)
-   - [LangSmith API Key](https://platform.langchain.com/account/api-keys)
-   - [LangChain API Key](https://platform.langchain.com/account/api-keys)
+   - [LangSmith API Key](https://smith.langchain.com/)
+   - [LangChain API Key](https://smith.langchain.com/)
    - [HuggingFace API Key](https://huggingface.co/settings/tokens)
    - [Pinecone API Key](https://app.pinecone.io/organizations/my-organization/keys)
    - [NVIDIA API Key](https://developer.nvidia.com/)
@@ -116,3 +120,6 @@ Crea una carpeta en tu máquina local donde clonar los repositorios del frontend
    uvicorn src.main:app --reload
    ```
 
+---
+
+Con estos pequeños cambios y emojis, el archivo README debería ser más claro y atractivo para quien lo lea.
